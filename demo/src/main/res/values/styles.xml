@@ -1,0 +1,55 @@
+<resources>
+
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+  </style>
+
+  <style name="HomeActivityTheme" parent="AppTheme">
+
+  </style>
+
+  <style name="AppTheme.Full" parent="AppTheme.NoActionBar">
+    <item name="android:windowFullscreen">true</item>
+  </style>
+
+  <style name="AppTheme.Splash" parent="AppTheme.Full">
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
+
+  <!--自定义dialog背景全透明无边框theme -->
+  <style name="MyDialog" parent="android:style/Theme.Dialog">
+    <!--背景颜色及和透明程度-->
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <!--是否去除标题 -->
+    <item name="android:windowNoTitle">true</item>
+    <!--是否去除边框-->
+    <item name="android:windowFrame">@null</item>
+    <!--是否浮现在activity之上-->
+    <item name="android:windowIsFloating">true</item>
+    <!--是否模糊-->
+    <item name="android:backgroundDimEnabled">false</item>
+  </style>
+
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
+
+  <style name="LightPickerDialogTheme" parent="android:Theme.Holo.Light.Dialog">
+    <item name="android:windowMinWidthMinor">0dip</item>
+    <item name="android:windowMinWidthMajor">0dip</item>
+  </style>
+
+  <style name="DarkPickerDialogTheme" parent="android:Theme.Holo.Dialog">
+    <item name="android:windowMinWidthMinor">0dip</item>
+    <item name="android:windowMinWidthMajor">0dip</item>
+  </style>
+
+</resources>

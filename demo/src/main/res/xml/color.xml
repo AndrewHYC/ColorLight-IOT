@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.flask.colorpicker.ColorPickerPreference
+        android:key="color_picker_preference2"
+        android:title="自定义灯光选择"
+        android:summary="自定义更多灯光选取与设置"
+        app:alphaSlider="false"
+        app:density="10"
+        app:initialColor="0xFFCDDC39"
+        app:lightnessSlider="true"
+        />
+
+</PreferenceScreen>
