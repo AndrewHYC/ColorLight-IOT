@@ -26,6 +26,7 @@ public class MQTTService extends Service {
 
     private static MqttAndroidClient client;
     private MqttConnectOptions conOpt;
+    private String str1;
 
     // private String host = "tcp://10.0.2.2:61613";
     private String host = "tcp://www.dongvdong.top:1883";
@@ -152,8 +153,8 @@ public class MQTTService extends Service {
 
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-            final String str1 = new String(message.getPayload());
+            str1 = new String(message.getPayload());
+            Log.d(TAG, "messageArrived: gggggggggggggggggggg="+str1);
             MQTTMessage msg = new MQTTMessage();
             msg.setMessage(str1);
 
@@ -162,7 +163,6 @@ public class MQTTService extends Service {
                 intent.putExtra("Message",str1);
                 intent.setAction("com.example.hyc.colorlight.demo.MQTTService");
                 sendBroadcast(intent);
-
 
             String str2 = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
             Log.i(TAG, "messageArrived:" + str1);

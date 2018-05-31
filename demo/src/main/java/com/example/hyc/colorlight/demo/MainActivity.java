@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -86,14 +87,6 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     //监测网络是否连接
     connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     info = connectivityManager.getActiveNetworkInfo();
-    if (info != null && info.isAvailable()) {
-      String name = info.getTypeName();
-      Toast.makeText(this,"已连接网络",Toast.LENGTH_SHORT).show();
-      Log.i(TAG, "MQTT当前网络名称：" + name);
-    } else {
-      Toast.makeText(this,"无可用网络",Toast.LENGTH_SHORT).show();
-      Log.i(TAG, "MQTT 没有可用网络");
-    }
 
     myService.setTopic(lightId);
     serviceIntent = new Intent(this, MQTTService.class);
@@ -159,7 +152,15 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 //              myService.publish(json);
               myService.publish("1023");
           }else{
-            Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+//            Toast toast = Toast.makeText(getApplicationContext(),
+//                    "失败", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.BOTTOM, 0, 100);
+//            LinearLayout toastView = (LinearLayout) toast.getView();
+//            ImageView imageCodeProject = new ImageView(getApplicationContext());
+//            imageCodeProject.setImageResource(R.drawable.unsuc);
+//            toastView.addView(imageCodeProject, 0);
+//            toast.show();
+            showSnackBar("请检查网络是否连接");
           }
         }else{
           String json = "{\"ledmode\":1,\"cc\":0}";
@@ -168,7 +169,15 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 //              myService.publish(json);
             myService.publish("0");
           }else{
-            Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+//            Toast toast = Toast.makeText(getApplicationContext(),
+//                    "失败", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.BOTTOM, 0, 100);
+//            LinearLayout toastView = (LinearLayout) toast.getView();
+//            ImageView imageCodeProject = new ImageView(getApplicationContext());
+//            imageCodeProject.setImageResource(R.drawable.unsuc);
+//            toastView.addView(imageCodeProject, 0);
+//            toast.show();
+            showSnackBar("请检查网络是否连接");
           }
         }
       }
@@ -215,7 +224,15 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     if (info != null && info.isAvailable()) {
               myService.publish(json);
     }else{
-      Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+//      Toast toast = Toast.makeText(getApplicationContext(),
+//              "失败", Toast.LENGTH_SHORT);
+//      toast.setGravity(Gravity.BOTTOM, 0, 100);
+//      LinearLayout toastView = (LinearLayout) toast.getView();
+//      ImageView imageCodeProject = new ImageView(getApplicationContext());
+//      imageCodeProject.setImageResource(R.drawable.unsuc);
+//      toastView.addView(imageCodeProject, 0);
+//      toast.show();
+      showSnackBar("请检查网络是否连接");
     }
   }
 
@@ -237,7 +254,15 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     if (info != null && info.isAvailable()) {
               myService.publish(json);
     }else{
-      Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+//      Toast toast = Toast.makeText(getApplicationContext(),
+//              "失败", Toast.LENGTH_SHORT);
+//      toast.setGravity(Gravity.BOTTOM, 0, 100);
+//      LinearLayout toastView = (LinearLayout) toast.getView();
+//      ImageView imageCodeProject = new ImageView(getApplicationContext());
+//      imageCodeProject.setImageResource(R.drawable.unsuc);
+//      toastView.addView(imageCodeProject, 0);
+//      toast.show();
+      showSnackBar("请检查网络是否连接");
     }
   }
 
@@ -270,19 +295,10 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
       if(mqttMessage.equals("ok")){
         toast = Toast.makeText(getApplicationContext(),
                 "成功", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, 10);
+        toast.setGravity(Gravity.BOTTOM, 0, 100);
         LinearLayout toastView = (LinearLayout) toast.getView();
         ImageView imageCodeProject = new ImageView(getApplicationContext());
         imageCodeProject.setImageResource(R.drawable.suc);
-        toastView.addView(imageCodeProject, 0);
-        toast.show();
-      }else if(mqttMessage.equals("")){
-        toast = Toast.makeText(getApplicationContext(),
-                "失败", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, 10);
-        LinearLayout toastView = (LinearLayout) toast.getView();
-        ImageView imageCodeProject = new ImageView(getApplicationContext());
-        imageCodeProject.setImageResource(R.drawable.unsuc);
         toastView.addView(imageCodeProject, 0);
         toast.show();
       }
@@ -301,10 +317,31 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 //        connectivityManager = (ConnectivityManager) getParent().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         info = connectivityManager.getActiveNetworkInfo();
       }else{
-        Toast.makeText(context,"网络已断开",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"网络未连接",Toast.LENGTH_SHORT).show();
         stopService(serviceIntent);
       }
     }
   }
+
+  /**
+   * 展示一个SnackBar
+   */
+  public void showSnackBar(String message) {
+    //去掉虚拟按键
+    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION //隐藏虚拟按键栏
+            | View.SYSTEM_UI_FLAG_IMMERSIVE //防止点击屏幕时,隐藏虚拟按键栏又弹了出来
+    );
+    final Snackbar snackbar = Snackbar.make(getWindow().getDecorView(), message, Snackbar.LENGTH_INDEFINITE);
+    snackbar.setAction("知道了", new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        snackbar.dismiss();
+        //隐藏SnackBar时记得恢复隐藏虚拟按键栏,不然屏幕底部会多出一块空白布局出来,和难看
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+      }
+    }).show();
+  }
+
 }
  
