@@ -97,16 +97,17 @@ public class MQTTService extends Service {
             }
         }
 
-        if (doConnect) {
+        if(isConnectIsNomarl()&&doConnect){
             doClientConnection();
         }
-
     }
 
     @Override
     public void onDestroy() {
         try {
-            client.disconnect();
+            if(isConnectIsNomarl()){
+                client.disconnect();
+            }
         } catch (MqttException e) {
             e.printStackTrace();
         }

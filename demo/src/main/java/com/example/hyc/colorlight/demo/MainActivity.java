@@ -66,9 +66,12 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
   private String newColor;
   Intent serviceIntent;
 
-  private TextView textView = null;    //显示Mqtt回调数据
   private MqttReceiver receiver = null;
+  ConnectivityManager connectivityManager=null;
+  NetworkInfo info = null;
 
+  private IntentFilter intentFilter = null;
+  private NetworkChangeReceiver networkChangeReceiver=null;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     Log.d(TAG, "onCreate: lightId="+lightId);
 
     //监测网络是否连接
-    ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+    connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    info = connectivityManager.getActiveNetworkInfo();
     if (info != null && info.isAvailable()) {
       String name = info.getTypeName();
       Toast.makeText(this,"已连接网络",Toast.LENGTH_SHORT).show();
@@ -96,12 +99,17 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     serviceIntent = new Intent(this, MQTTService.class);
     startService(serviceIntent);
 
-    //注册广播接收器
+    //注册广播接收器接收Mqtt回调信息
     receiver=new MqttReceiver();
     IntentFilter filter=new IntentFilter();
     filter.addAction("com.example.hyc.colorlight.demo.MQTTService");
     MainActivity.this.registerReceiver(receiver,filter);
-    textView = (TextView)findViewById(R.id.MqttCallbacktext);
+
+    //监听网络变化
+    intentFilter = new IntentFilter();
+    intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+    networkChangeReceiver = new NetworkChangeReceiver();
+    registerReceiver(networkChangeReceiver,intentFilter);
 
 //    Bundle bundle = new Bundle();       //Activity向Fragment传值
 //    bundle.putString("LIGHT_ID", lightId);
@@ -146,13 +154,22 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
         if(b){
           String json = "{\"ledmode\":1,\"cc\":1}";
 //          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
-//          myService.publish(json);
-          myService.publish("1023");
+
+          if (info != null && info.isAvailable()) {
+//              myService.publish(json);
+              myService.publish("1023");
+          }else{
+            Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+          }
         }else{
           String json = "{\"ledmode\":1,\"cc\":0}";
 //          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
-//          myService.publish(json);
-          myService.publish("0");
+          if (info != null && info.isAvailable()) {
+//              myService.publish(json);
+            myService.publish("0");
+          }else{
+            Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+          }
         }
       }
     });
@@ -172,12 +189,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        new Thread(new Runnable() {
-          @Override
-          public void run() {
             stopService(serviceIntent);
-          }
-        }).start();
         finish();
         return true;
     }
@@ -200,7 +212,11 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     String json = "{\"ledmode\":2"
             +",\"cr\":"+array[1]+",\"cg\":"+array[2]+",\"cb\":"+array[3]+"}";
 //    Toast.makeText(this,json,Toast.LENGTH_SHORT).show();
-    myService.publish(json);
+    if (info != null && info.isAvailable()) {
+              myService.publish(json);
+    }else{
+      Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+    }
   }
 
   @Override
@@ -218,18 +234,17 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     String json = "{\"ledmode\":2"
             +",\"cr\":"+array[1]+",\"cg\":"+array[2]+",\"cb\":"+array[3]+"}";
 //    Toast.makeText(this,json,Toast.LENGTH_SHORT).show();
-    myService.publish(json);
+    if (info != null && info.isAvailable()) {
+              myService.publish(json);
+    }else{
+      Toast.makeText(MainActivity.this,"无可用网络",Toast.LENGTH_SHORT).show();
+    }
   }
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {
 
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
         stopService(serviceIntent);
-      }
-    }).start();
 
     finish();
 
@@ -238,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 
   @Override
   protected void onDestroy() {
-
+    unregisterReceiver(networkChangeReceiver);//释放广播接收者
     unregisterReceiver(receiver);//释放广播接收者
     super.onDestroy();
   }
@@ -272,6 +287,23 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
         toast.show();
       }
 
+    }
+  }
+
+  public class NetworkChangeReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+      if(networkInfo != null && networkInfo.isAvailable()){
+        Toast.makeText(context,"网络已连接",Toast.LENGTH_SHORT).show();
+        startService(serviceIntent);
+//        connectivityManager = (ConnectivityManager) getParent().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        info = connectivityManager.getActiveNetworkInfo();
+      }else{
+        Toast.makeText(context,"网络已断开",Toast.LENGTH_SHORT).show();
+        stopService(serviceIntent);
+      }
     }
   }
 }
