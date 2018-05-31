@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -25,18 +26,16 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
  * Created by hyc on 18-5-24.
  */
 
-public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder> {
+public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder>{
 
-    onCallbackListener listener;
+//    onCallbackListener listener;
 
     class myViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         CardView cardView;
         ImageView lightImage;
         TextView lightName;
         TextView lightId;
-        Button deleteButton;
-
-
+//        Button deleteButton;
 
         public myViewHolder(View view){
             super(view);
@@ -44,8 +43,8 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder
             lightImage = (ImageView)view.findViewById(R.id.light_image);
             lightName = (TextView)view.findViewById(R.id.light_name);
             lightId = (TextView)view.findViewById(R.id.light_id);
-            deleteButton = (Button)view.findViewById(R.id.delete);
-            deleteButton.setOnClickListener(this);
+//            deleteButton = (Button)view.findViewById(R.id.delete);
+//            deleteButton.setOnClickListener(this);
 //            cardView.setOnClickListener(this);
             lightImage.setOnClickListener(this);
         }
@@ -67,24 +66,24 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder
             light = mLightList.get(position);
 
             switch (view.getId()){
-                case R.id.delete:
-                    final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                    dialog.setTitle("警告");
-                    dialog.setMessage("确定要删除吗?");
-                    dialog.setCancelable(true);
-                    dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            listener.SendMessageValue(light.getId());
-                        }
-                    });
-                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    });
-                    dialog.show();
-                    break;
+//                case R.id.delete:
+//                    final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+//                    dialog.setTitle("警告");
+//                    dialog.setMessage("确定要删除吗?");
+//                    dialog.setCancelable(true);
+//                    dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        }
+//                    });
+//                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                        }
+//                    });
+//                    dialog.show();
+//                    break;
                 case R.id.light_image:
                     Intent intent = new Intent(mContext, MainActivity.class);
                     intent.putExtra(MainActivity.LIGHT_NAME, light.getName());
@@ -115,7 +114,7 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder
         }
         Log.d(TAG, "onCreateViewHolder: mContext = "+mContext);
 
-        listener = (onCallbackListener) mContext;
+//        listener = (onCallbackListener) mContext;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.light_item, parent,false);
 
@@ -138,7 +137,4 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder
         return mLightList.size();
     }
 
-    public interface onCallbackListener{
-        public void SendMessageValue(String StrValue);
-    }
 }

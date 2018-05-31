@@ -5,21 +5,30 @@
     <!-- Customize your theme here. -->
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
     <item name="colorAccent">@color/colorAccent</item>
   </style>
 
   <style name="HomeActivityTheme" parent="AppTheme">
-
+    <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
   </style>
 
   <style name="AppTheme.Full" parent="AppTheme.NoActionBar">
     <item name="android:windowFullscreen">true</item>
   </style>
 
+  <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+    <item name="overlapAnchor">false</item>
+    <item name="android:dropDownVerticalOffset">4dp</item>
+    <item name="android:layout_marginRight">4dp</item>
+    <item name="android:popupBackground">@color/colorPrimary</item>
+  </style>
+
   <style name="AppTheme.Splash" parent="AppTheme.Full">
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowIsTranslucent">true</item>
+    <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
   </style>
 
   <!--自定义dialog背景全透明无边框theme -->
@@ -39,6 +48,7 @@
   <style name="AppTheme.NoActionBar">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
+    <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
   </style>
 
 

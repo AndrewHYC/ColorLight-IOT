@@ -1,1 +1,1 @@
-[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":1},"path":"demo-release.apk","properties":{"packageId":"com.jaredrummler.android.colorpicker.demo","split":"","minSdkVersion":"14"}}]
+[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":1},"path":"demo-release.apk","properties":{"packageId":"com.example.hyc.colorlight.demo","split":"","minSdkVersion":"16"}}]

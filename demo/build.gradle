@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.hyc.colorlight.demo"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -25,6 +25,7 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile project(':library')
     implementation project(':library1')
@@ -34,4 +35,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.github.yuzhiqiang1993:zxing:2.1.6'
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.0'
+
 }

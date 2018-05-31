@@ -5,11 +5,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <item
-      android:id="@+id/menu_color_picker_dialog"
-      android:icon="@drawable/ic_palette_white_24dp"
-      android:title="@string/color_picker_dialog"
-      app:showAsAction="always"
-      tools:ignore="AlwaysShowAction"/>
+  <!--<item-->
+      <!--android:id="@+id/menu_color_picker_dialog"-->
+      <!--android:icon="@drawable/ic_palette_white_24dp"-->
+      <!--android:title="@string/color_picker_dialog"-->
+      <!--app:showAsAction="always"-->
+      <!--tools:ignore="AlwaysShowAction"/>-->
 
+  <item
+      android:id="@+id/scan"
+      android:icon="@drawable/scan2"
+      app:showAsAction="always"
+      tools:ignore="AlwaysShowAction"
+      android:title="scan" />
+
+  <item
+    android:id="@+id/ques"
+    android:icon="@drawable/ques2"
+    app:showAsAction="never"
+    android:title="常见问题" />
+
+  <item
+    android:icon="@drawable/aboutus2"
+    android:id="@+id/about"
+    app:showAsAction="never"
+    android:title="关于我们"/>
 </menu>

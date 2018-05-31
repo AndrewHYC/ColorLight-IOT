@@ -48,7 +48,6 @@ public class ColorPickerPreference extends Preference {
 		initWith(context, attrs);
 	}
 
-
 	private void initWith(Context context, AttributeSet attrs) {
 		final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ColorPickerPreference);
 

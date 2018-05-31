@@ -3,10 +3,13 @@ package com.example.hyc.colorlight.demo;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by hyc on 18-5-25.
@@ -22,8 +25,8 @@ public class SelfDialog extends Dialog {
     private EditText dialog_light_id_text = null;   //编辑灯ID
     private String titleStr;//从外界设置的title文本
 //    private String messageStr;//从外界设置的消息文本
-    private String new_light_name;
-    private String new_light_is;
+    private String new_light_name = null;
+    private String new_light_id = null;
 
     //确定文本和取消文本的显示内容
     private String yesStr, noStr;
@@ -53,10 +56,13 @@ public class SelfDialog extends Dialog {
 
 
 
-    public SelfDialog(Context context,String str, PriorityListener listener) {
+    public SelfDialog(Context context,String Id, String str, PriorityListener listener) {
         super(context, R.style.MyDialog);
         if(str != null){
             yesStr = str;
+        }
+        if(Id != null){
+            new_light_id = Id;
         }
         this.yesListener = listener;
     }
@@ -70,6 +76,7 @@ public class SelfDialog extends Dialog {
 
         //初始化界面控件
         initView();
+
         //初始化界面数据
         initData();
         //初始化界面控件的事件
@@ -86,12 +93,21 @@ public class SelfDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 dismiss();
-                if(dialog_light_name_text.getText().toString()!=null&&dialog_light_id_text.getText().toString()!=null)
-                {
-                    String new_light_name = dialog_light_name_text.getText().toString();
-                    String new_light_id = dialog_light_id_text.getText().toString();
+                    if(dialog_light_name_text.getText().toString().equals("")){
+                        new_light_name = "爱心灯";
+                    }else{
+                        Log.d(TAG, "onClick: "+dialog_light_name_text.getText().toString());
+                        new_light_name = dialog_light_name_text.getText().toString();
+                    }
+                    if(dialog_light_id_text.getText().toString().equals("")){
+                        new_light_id = "null";
+                    }else{
+                        Log.d(TAG, "onClick: "+dialog_light_id_text.getText().toString());
+                        new_light_id = dialog_light_id_text.getText().toString();
+
+                    }
+
                     yesListener.refreshPriorityUI(new_light_name, new_light_id);
-                }
 
             }
         });
@@ -133,6 +149,9 @@ public class SelfDialog extends Dialog {
         titleTv = (TextView) findViewById(R.id.title);
         dialog_light_name_text = (EditText)findViewById(R.id.dialog_light_name_text);
         dialog_light_id_text = (EditText)findViewById(R.id.dialog_light_id_text);
+        if(new_light_id != null){
+            dialog_light_id_text.setText(new_light_id);
+        }
     }
 
     /**
