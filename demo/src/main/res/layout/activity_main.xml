@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.example.hyc.colorlight.demo.HomeActivity">
+        tools:context="com.example.hyc.colorlight.demo.Activity.HomeActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -88,8 +88,8 @@
 
                         <ToggleButton
                             android:id="@+id/breath_tb"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="60dp"
+                            android:layout_height="80dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:background="#00ffffff"

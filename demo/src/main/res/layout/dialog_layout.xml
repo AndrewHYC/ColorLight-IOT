@@ -5,7 +5,7 @@
     android:background="#88000000">
 
     <LinearLayout
-        android:layout_width="260dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
@@ -20,28 +20,31 @@
             android:layout_margin="15dp"
             android:gravity="center"
             android:text="添加新爱心灯"
-            android:textColor="#38ADFF"
-            android:textSize="16sp" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
             <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="bottom"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
                 android:id="@+id/dialog_light_name"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textColor="#38ADFF"
-                android:text="名称:"
-                android:textSize="18dp"/>
+                android:text="昵称:"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/dialog_light_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_toRightOf="@+id/dialog_light_name"/>
         </RelativeLayout>
 
@@ -50,47 +53,59 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
             <TextView
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="20dp"
                 android:gravity="bottom"
                 android:id="@+id/dialog_light_id"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textColor="#38ADFF"
-                android:text=" I   D :"
-                android:textSize="18dp"/>
+                android:text="I    D:"
+                android:textSize="20dp"/>
 
             <EditText
                 android:id="@+id/dialog_light_id_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_toRightOf="@+id/dialog_light_id" />
 
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FF4081"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:background="#E4E4E4" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/no"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="No"
                 android:textColor="#7D7D7D"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="1px"
@@ -101,14 +116,14 @@
                 android:id="@+id/yes"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Yes"
                 android:textColor="#38ADFF"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 

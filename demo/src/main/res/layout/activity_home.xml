@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hyc.colorlight.demo.HomeActivity">
+    tools:context="com.example.hyc.colorlight.demo.Activity.HomeActivity">
 
 <android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
@@ -21,8 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/ToolBarStyle"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 />
         </android.support.design.widget.AppBarLayout>
@@ -31,7 +30,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </android.support.v7.widget.RecyclerView>
 
 
         <android.support.design.widget.FloatingActionButton
@@ -41,7 +42,7 @@
             android:layout_gravity="bottom|right"
             android:layout_marginRight="20dp"
             android:src="@drawable/add"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="100dp"
             />
 
 

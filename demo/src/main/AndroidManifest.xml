@@ -36,12 +36,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
 
             <!-- android:theme="@style/HomeActivityTheme"> -->
         </activity>
-        <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name=".Activity.HomeActivity"></activity>
+        <activity android:name=".Activity.SplashActivity">
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +52,7 @@
         <!-- Mqtt Service -->
         <service android:name="org.eclipse.paho.android.service.MqttService" />
         <service
-            android:name=".MQTTService"
+            android:name=".MQTT.MQTTService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

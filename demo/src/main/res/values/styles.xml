@@ -1,16 +1,30 @@
 <resources>
 
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="Theme.Actionbar" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
     <item name="colorAccent">@color/colorAccent</item>
+    <item name="actionMenuTextColor">@color/md_white</item>
+  </style>
+
+  <style name="ToolBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="actionMenuTextColor">@color/md_white</item>
+    <item name="android:popupBackground">@color/colorPrimary</item>
+    <item name="android:textSize">24dp</item> <!--  搞掂字体大小-->
+    <item name="android:textStyle">normal</item>
+    <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
   </style>
 
   <style name="HomeActivityTheme" parent="AppTheme">
+    <item name="actionMenuTextColor">@color/md_white</item>
     <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+
   </style>
 
   <style name="AppTheme.Full" parent="AppTheme.NoActionBar">
@@ -19,8 +33,10 @@
 
   <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
     <item name="overlapAnchor">false</item>
+    <!-- 弹出层垂直方向上的偏移，即在竖直方向上距离Toolbar的距离，值为负则会盖住Toolbar -->
     <item name="android:dropDownVerticalOffset">4dp</item>
-    <item name="android:layout_marginRight">4dp</item>
+    <!-- 弹出层水平方向上的偏移，即距离屏幕左边的距离，负值会导致右边出现空隙 -->
+    <item name="android:dropDownHorizontalOffset">0dp</item>
     <item name="android:popupBackground">@color/colorPrimary</item>
   </style>
 
@@ -29,6 +45,7 @@
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowIsTranslucent">true</item>
     <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    <item name="actionMenuTextColor">@color/md_white</item>
   </style>
 
   <!--自定义dialog背景全透明无边框theme -->
@@ -49,17 +66,20 @@
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
     <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    <item name="actionMenuTextColor">@color/md_white</item>
   </style>
 
 
   <style name="LightPickerDialogTheme" parent="android:Theme.Holo.Light.Dialog">
     <item name="android:windowMinWidthMinor">0dip</item>
     <item name="android:windowMinWidthMajor">0dip</item>
+    <item name="actionMenuTextColor">@color/md_white</item>
   </style>
 
   <style name="DarkPickerDialogTheme" parent="android:Theme.Holo.Dialog">
     <item name="android:windowMinWidthMinor">0dip</item>
     <item name="android:windowMinWidthMajor">0dip</item>
+    <item name="actionMenuTextColor">@color/md_white</item>
   </style>
 
 </resources>

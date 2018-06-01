@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static android.content.ContentValues.TAG;
 
@@ -27,6 +28,7 @@ public class SelfDialog extends Dialog {
 //    private String messageStr;//从外界设置的消息文本
     private String new_light_name = null;
     private String new_light_id = null;
+    private TextView warrningText = null;
 
     //确定文本和取消文本的显示内容
     private String yesStr, noStr;
@@ -92,22 +94,27 @@ public class SelfDialog extends Dialog {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                    if(dialog_light_name_text.getText().toString().equals("")){
-                        new_light_name = "爱心灯";
-                    }else{
-                        Log.d(TAG, "onClick: "+dialog_light_name_text.getText().toString());
-                        new_light_name = dialog_light_name_text.getText().toString();
-                    }
+
                     if(dialog_light_id_text.getText().toString().equals("")){
-                        new_light_id = "null";
+
+                        warrningText.setText("");
+                        warrningText.setText("不能没有产品ID哦");
+
                     }else{
+                        if(dialog_light_name_text.getText().toString().equals("")){
+                            new_light_name = "爱心灯";
+                        }else{
+                            Log.d(TAG, "onClick: "+dialog_light_name_text.getText().toString());
+                            new_light_name = dialog_light_name_text.getText().toString();
+                        }
                         Log.d(TAG, "onClick: "+dialog_light_id_text.getText().toString());
                         new_light_id = dialog_light_id_text.getText().toString();
 
+                        dismiss();
+                        yesListener.refreshPriorityUI(new_light_name, new_light_id);
                     }
 
-                    yesListener.refreshPriorityUI(new_light_name, new_light_id);
+
 
             }
         });
@@ -152,6 +159,7 @@ public class SelfDialog extends Dialog {
         if(new_light_id != null){
             dialog_light_id_text.setText(new_light_id);
         }
+        warrningText = (TextView)findViewById(R.id.warning);
     }
 
     /**

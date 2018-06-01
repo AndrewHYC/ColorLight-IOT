@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hyc.colorlight.demo.SplashActivity"
+    tools:context="com.example.hyc.colorlight.demo.Activity.SplashActivity"
     android:background="@color/colorPrimary">
 
     <RelativeLayout
@@ -14,9 +14,9 @@
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/image"
-            android:layout_marginTop="300dp"
+            android:layout_marginTop="400dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:src="@mipmap/ic_launcher"
             android:gravity="center"/>
         <TextView
