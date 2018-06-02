@@ -2,7 +2,9 @@ package com.example.hyc.colorlight.demo;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -97,9 +99,18 @@ public class SelfDialog extends Dialog {
 
                     if(dialog_light_id_text.getText().toString().equals("")){
 
-                        warrningText.setText("");
-                        warrningText.setText("不能没有产品ID哦");
+                        if(dialog_light_name_text.getText().toString().equals("调试")
+                                ||dialog_light_name_text.getText().toString().equals("DEBUG")){
+                            new_light_name = "调试";
+                            new_light_id = "";
+                            dismiss();
+                            yesListener.refreshPriorityUI(new_light_name, new_light_id);
 
+                        }else{
+                            dialog_light_id_text.setError("不能没有产品ID哦");
+                            Vibrator vibrator = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
+                            vibrator.vibrate(200);
+                        }
                     }else{
                         if(dialog_light_name_text.getText().toString().equals("")){
                             new_light_name = "爱心灯";

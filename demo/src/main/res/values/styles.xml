@@ -10,6 +10,10 @@
     <item name="actionMenuTextColor">@color/md_white</item>
   </style>
 
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="elevation">0dp</item>
+  </style>
+
   <style name="ToolBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
     <item name="actionMenuTextColor">@color/md_white</item>
     <item name="android:popupBackground">@color/colorPrimary</item>

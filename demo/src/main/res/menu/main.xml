@@ -20,14 +20,9 @@
       android:title="scan" />
 
   <item
-    android:id="@+id/ques"
-    android:icon="@drawable/ques2"
-    app:showAsAction="never"
-    android:title="常见问题" />
+    android:id="@+id/add"
+    android:icon="@drawable/add"
+    app:showAsAction="always"
+    android:title="add" />
 
-  <item
-    android:icon="@drawable/aboutus2"
-    android:id="@+id/about"
-    app:showAsAction="never"
-    android:title="关于我们"/>
 </menu>

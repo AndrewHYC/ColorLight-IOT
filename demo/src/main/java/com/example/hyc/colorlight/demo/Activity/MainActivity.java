@@ -36,6 +36,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -57,8 +58,9 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
   public static final String LIGHT_NAME = "light_name";
   public static final String LIGHT_IMAGE_ID = "light_image_id";
   public static final String LIGHT_ID = "light_id";
+  private SeekBar mseekBarvolume;     //滑块
 
-  final MQTTService myService = new MQTTService();
+  MQTTService myService = new MQTTService();
   private String lightId;
   private String newColor;
   Intent serviceIntent;
@@ -84,9 +86,36 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     info = connectivityManager.getActiveNetworkInfo();
 
+
     myService.setTopic(lightId);
     serviceIntent = new Intent(this, MQTTService.class);
     startService(serviceIntent);
+
+    mseekBarvolume = (SeekBar)findViewById(R.id.color_seekbar);
+    mseekBarvolume.setMax(1023);
+
+    mseekBarvolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override
+      public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        int tmpInt = seekBar.getProgress();
+        if(tmpInt < 0){
+          tmpInt =0;
+        }
+
+        myService.publish(String.valueOf(tmpInt));
+
+      }
+
+      @Override
+      public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
 
     //注册广播接收器接收Mqtt回调信息
     receiver=new MqttReceiver();
@@ -145,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 //          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
 
           if (info != null && info.isAvailable()) {
-//              myService.publish(json);
-              myService.publish("1023");
+              myService.publish(json);
+//              myService.publish("1023");
           }else{
 
 //            Toast toast = Toast.makeText(getApplicationContext(),
@@ -164,8 +193,8 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
           String json = "{\"ledmode\":1,\"cc\":0}";
 //          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
           if (info != null && info.isAvailable()) {
-//              myService.publish(json);
-            myService.publish("0");
+              myService.publish(json);
+//            myService.publish("0");
           }else{
 
 //            Toast toast = Toast.makeText(getApplicationContext(),
@@ -278,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 
   @Override
   protected void onDestroy() {
+    stopService(serviceIntent);
     unregisterReceiver(networkChangeReceiver);//释放广播接收者
     unregisterReceiver(receiver);//释放广播接收者
     super.onDestroy();

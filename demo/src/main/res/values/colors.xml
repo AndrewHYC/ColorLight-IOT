@@ -20,6 +20,7 @@
   <color name="colorPrimary">#FF009688</color>
   <color name="colorPrimaryDark">#FF009688</color>
   <color name="colorAccent">#FF03A9F4</color>
+  <color name="colorPrimary1">#119688</color>
 
   <array name="demo_colors">
     <item>@color/md_red_500</item>

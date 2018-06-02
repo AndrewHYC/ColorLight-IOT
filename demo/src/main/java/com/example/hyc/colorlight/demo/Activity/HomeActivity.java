@@ -1,64 +1,75 @@
 package com.example.hyc.colorlight.demo.Activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
-import android.content.DialogInterface;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Canvas;
-import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.content.IntentFilter;
+import android.graphics.Color;
+
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
+
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.hyc.colorlight.demo.Light;
-import com.example.hyc.colorlight.demo.LightAdapter;
-import com.example.hyc.colorlight.demo.MyDatabaseHelper;
+import com.example.hyc.colorlight.demo.HomeFragment.DeviceFragment;
+import com.example.hyc.colorlight.demo.HomeFragment.DeviceFragmentPagerAdapter;
+import com.example.hyc.colorlight.demo.HomeFragment.MineFragment;
+
+import com.example.hyc.colorlight.demo.MQTT.MQTTService;
+import com.example.hyc.colorlight.demo.MQTT.UpdateService;
 import com.example.hyc.colorlight.demo.R;
-import com.example.hyc.colorlight.demo.SelfDialog;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-public class HomeActivity extends AppCompatActivity{
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener{
 
     private static String TAG = "HomeActivity";
-    private MyDatabaseHelper databaseHelper;
 
     private long exitTime = 0;
 
-    private Light[] lights;// = {new Light("Light Name",R.drawable.light2,"ID Number")};
-    private SelfDialog selfDialog;
-    private RecyclerView recyclerView;
+    private UpdateService Service = new UpdateService();
+    private boolean update;
 
-    private List<Light> lightList = new ArrayList<>();
+    private ViewPager myviewpager;
+    //fragment的集合，对应每个子页面
+    private ArrayList<Fragment> fragments;
+    //选项卡中的按钮
+    private Button btn_first;
+    private Button btn_second;
 
-    private LightAdapter adapter;
+    //作为指示标签的按钮
+    private ImageView cursor;
+    //标志指示标签的横坐标
+    float cursorX = 0;
+    //所有按钮的宽度的集合
+    private int[] widthArgs;
+    //所有按钮的集合
+    private Button[] btnArgs;
 
-    private int position;  //左滑删除时获取位置
+    Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,188 +78,151 @@ public class HomeActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //=======================database=================//
-        boolean isTableExist=true;
-        SQLiteDatabase db0=openOrCreateDatabase("LightStore.db", 0, null);
-        Cursor c=db0.rawQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='Light'", null);
-        Log.d(TAG, "onCreate: cursor.Count="+c.getColumnCount());
-        if (c.getCount()==0) {
-            isTableExist=false;
-        }
-        c.close();
-        db0.close();
-        if(isTableExist == false){
-            databaseHelper = new MyDatabaseHelper(this,"LightStore.db",null,1);
-        }else{
-            databaseHelper = new MyDatabaseHelper(this);
-        }
 
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        //查询Light表中所有数据
+        serviceIntent = new Intent(this, UpdateService.class);
+//        startService(serviceIntent);
 
-        Cursor cursor = db.query("Light",null,null,null,null,null,null);
-        int length = cursor.getCount();
-        Log.d(TAG, "onCreate: length = "+length);
-        if(length == 0){
-            showSnackBar("没有设备?\n请通过上方扫码或手动添加");
-        }
-            Light[] tempLights = new Light[length];
-            lights = tempLights;
-
-            int i = 0;
-            if(cursor.moveToFirst()){
-                do {
-                    //遍历Cursor对象,并取出数据
-                    String name = cursor.getString(cursor.getColumnIndex("name"));
-                    String id = cursor.getString(cursor.getColumnIndex("id"));
-                    switch (i%5){
-                        case 0:
-                            lights[i] = new Light(name,R.drawable.light1,id);
-                            break;
-                        case 1:
-                            lights[i] = new Light(name,R.drawable.light2,id);
-                            break;
-                        case 2:
-                            lights[i] = new Light(name,R.drawable.light3,id);
-                            break;
-                        case 3:
-                            lights[i] = new Light(name,R.drawable.light4,id);
-                            break;
-                        case 4:
-                            lights[i] = new Light(name,R.drawable.light5,id);
-                            break;
-                            default:
-                                break;
-                    }
-                    i++;
-                }while(cursor.moveToNext());
-            }
-//        }
-
-        //==================================================//
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
 
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,1);
-        recyclerView.setLayoutManager(layoutManager);
-
-        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,
-                ItemTouchHelper.START | ItemTouchHelper.END) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getAdapterPosition();
-                int toPosition = target.getAdapterPosition();
-                if (fromPosition < toPosition) {
-                    for (int i = fromPosition; i < toPosition; i++) {
-                        Collections.swap(lightList, i, i + 1);
-                    }
-                } else {
-                    for (int i = fromPosition; i > toPosition; i--) {
-                        Collections.swap(lightList, i, i - 1);
-                    }
-                }
-
-                updateSQLiteData();
-
-                adapter.notifyItemMoved(fromPosition, toPosition);
-                return true;
-            }
-
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                position = viewHolder.getAdapterPosition();
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(HomeActivity.this);
-                dialog.setTitle("警告");
-                dialog.setMessage("确定要删除吗?");
-                dialog.setCancelable(true);
-                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        deleteValue();
-                    }
-                });
-                dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        recyclerView.setAdapter(adapter);
-                    }
-                });
-                dialog.show();
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    final float alpha = 1 - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
-                    viewHolder.itemView.setAlpha(alpha);
-                    viewHolder.itemView.setTranslationX(dX);
-                }
-            }
-        };
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
-        initLights();
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callSelfDialog(null);
-            }
-        });
-
+        initView();
     }
 
-    private void updateSQLiteData() {
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM Light");
-        ContentValues values = new ContentValues();
-        for(int i = 0;i < lightList.size(); i++)
-        {
-            values.put("name",lightList.get(i).getName());
-            values.put("id",lightList.get(i).getId());
-            db.insert("Light",null,values);
-            values.clear();
+
+    public void initView(){
+
+        myviewpager = (ViewPager)findViewById(R.id.myviewpager);
+
+        btn_first = (Button)findViewById(R.id.btn_first);
+        btn_second = (Button)findViewById(R.id.btn_second);
+
+        btnArgs = new Button[]{btn_first,btn_second};
+
+        cursor = (ImageView)findViewById(R.id.cursor_btn);
+        cursor.setBackgroundColor(Color.parseColor("#88009688"));
+
+        myviewpager.setOnPageChangeListener(this);
+        btn_first.setOnClickListener(this);
+        btn_second.setOnClickListener(this);
+
+        fragments = new ArrayList<Fragment>();
+        fragments.add(new DeviceFragment());
+        fragments.add(new MineFragment());
+
+        DeviceFragmentPagerAdapter adapter = new DeviceFragmentPagerAdapter(getSupportFragmentManager(),fragments);
+        myviewpager.setAdapter(adapter);
+
+        if(widthArgs==null){
+            WindowManager wm = (WindowManager) this
+                    .getSystemService(Context.WINDOW_SERVICE);
+            int width = wm.getDefaultDisplay().getWidth();
+
+            widthArgs = new int[]{width/2,
+                    width/2};
+        }
+
+        resetButtonColor();
+        btn_first.setTextColor(Color.parseColor("#ffffff"));
+        cursorAnim(0);
+    }
+
+    //重置所有按钮的颜色
+    public void resetButtonColor(){
+        btn_first.setBackgroundColor(Color.parseColor("#FF009688"));
+        btn_second.setBackgroundColor(Color.parseColor("#FF009688"));
+
+        btn_first.setTextColor(Color.parseColor("#bebebe"));
+        btn_second.setTextColor(Color.parseColor("#bebebe"));
+    }
+
+    @Override
+    public void onClick(View whichbtn) {
+        // TODO Auto-generated method stub
+
+        switch (whichbtn.getId()) {
+            case R.id.btn_first:
+                myviewpager.setCurrentItem(0);
+                cursorAnim(0);
+                btn_first.setTextColor(Color.parseColor("#FFFFFF"));
+                break;
+            case R.id.btn_second:
+                myviewpager.setCurrentItem(1);
+                cursorAnim(1);
+                btn_second.setTextColor(Color.parseColor("#FFFFFF"));
+                break;
+            default:
+                break;
         }
     }
 
-    private void initLights(){
-        lightList.clear();
-        for(int i = 0; i < lights.length; i++)
-        {
-            Log.d(TAG, "initLights: light["+i+"] = "+lights[i]);
-            lightList.add(lights[i]);
-        }
-        adapter = new LightAdapter(lightList);
-        recyclerView.setAdapter(adapter);
+    @Override
+    public void onPageScrollStateChanged(int arg0) {
+        // TODO Auto-generated method stub
+
     }
 
-    private void deleteValue() {
+    @Override
+    public void onPageScrolled(int arg0, float arg1, int arg2) {
+        // TODO Auto-generated method stub
 
-        String deleteId = lights[position].getId();
-
-        lightList.remove(position);
-        adapter.notifyItemRemoved(position);
-        if(lightList.size()==0){
-            showSnackBar("没有设备?\n请通过上方扫码或手动添加");
-        }
-        //=======================database=====================//
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        long l = db.delete("Light","id = ?",new String[]{deleteId});
-        Toast.makeText(HomeActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
-        //====================================================//
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+    @Override
+    public void onPageSelected(int arg0) {
+        // TODO Auto-generated method stub
+
+        //每次滑动首先重置所有按钮的颜色
+        resetButtonColor();
+        //将滑动到的当前按钮颜色设置为红色
+        btnArgs[arg0].setTextColor(Color.parseColor("#FFFFFF"));
+        cursorAnim(arg0);
+    }
+
+    //指示器的跳转，传入当前所处的页面的下标
+    public void cursorAnim(int curItem){
+        //每次调用，就将指示器的横坐标设置为0，即开始的位置
+        cursorX = 0;
+        //再根据当前的curItem来设置指示器的宽度
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)cursor.getLayoutParams();
+        //减去边距*2，以对齐标题栏文字
+        lp.width = widthArgs[curItem]-btnArgs[0].getPaddingLeft()*2;
+        cursor.setLayoutParams(lp);
+        //循环获取当前页之前的所有页面的宽度
+        for(int i=0; i<curItem; i++){
+            cursorX = cursorX + btnArgs[i].getWidth();
+        }
+        //再加上当前页面的左边距，即为指示器当前应处的位置
+        cursor.setX(cursorX+btnArgs[curItem].getPaddingLeft());
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getRepeatCount() == 0) {
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                stopService(serviceIntent);
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(serviceIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
         return true;
     }
 
@@ -267,40 +241,26 @@ public class HomeActivity extends AppCompatActivity{
                 config.setShake(true);//是否震动
                 config.setShowAlbum(true);//是否显示相册
                 config.setShowFlashLight(true);//是否显示闪光灯
-                Intent intent = new Intent(HomeActivity.this, CaptureActivity.class);
+                Intent intent = new Intent(this, CaptureActivity.class);
                 intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
                 startActivityForResult(intent, REQUEST_CODE_SCAN);
                 return true;
-            case R.id.ques:
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://www.baidu.com")));
-                } catch (ActivityNotFoundException ignored) {
-                }
+//            case R.id.ques:
+//                try {
+//                    startActivity(new Intent(Intent.ACTION_VIEW,
+//                            Uri.parse("https://www.baidu.com")));
+//                } catch (ActivityNotFoundException ignored) {
+//                }
+//                return true;
+            case R.id.add:
+                SendAddBroadCast(null,null);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN
-                && event.getRepeatCount() == 0) {
-            if((System.currentTimeMillis()-exitTime) > 2000){
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                finish();
-                System.exit(0);
-            }
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // 扫描二维码/条码回传
@@ -309,132 +269,17 @@ public class HomeActivity extends AppCompatActivity{
 
                 String new_light_id = data.getStringExtra(Constant.CODED_CONTENT);
                 Log.d(TAG, "onActivityResult: Result:"+new_light_id);
-                callSelfDialog(new_light_id);
+                SendAddBroadCast(null,new_light_id);
             }
         }
     }
 
-    private void updateHomeView(String new_light_name, String new_light_id)
-    {
-        if(new_light_name!=null&&new_light_id!=null)
-        {
-            Light[] temlights = new Light[lights.length+1];
-            System.arraycopy(lights,0,temlights,0,lights.length);
-
-            switch (lights.length%5){
-                case 0:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light1,new_light_id);
-                    break;
-                case 1:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light2,new_light_id);
-                    break;
-                case 2:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light3,new_light_id);
-                    break;
-                case 3:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light4,new_light_id);
-                    break;
-                case 4:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light5,new_light_id);
-                    break;
-                default:
-                    break;
-            }
-
-            lights = temlights;
-
-            lightList.add(temlights[lights.length-1]);
-
-            //======================database=====================//
-            SQLiteDatabase db = databaseHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put("name",new_light_name);
-            values.put("id",new_light_id);
-            long i = db.insert("Light",null,values);
-            Toast.makeText(HomeActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
-            //=====================================================//
-
-            adapter = new LightAdapter(lightList);
-            recyclerView.setAdapter(adapter);
-
-        }
-    }
-
-    private void callSelfDialog(String id){
-        selfDialog = new SelfDialog(HomeActivity.this,id,"确定",new SelfDialog.PriorityListener() {
-            @Override
-            public void refreshPriorityUI(String new_light_name, String new_light_id) {
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.alpha = 1.0f;
-                getWindow().setAttributes(lp);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                updateHomeView(new_light_name, new_light_id);
-            }
-        });
-
-        selfDialog.setNoOnclickListener("取消", new SelfDialog.onNoOnclickListener() {
-            @Override
-            public void onNoClick() {
-                selfDialog.dismiss();
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.alpha = 1.0f;
-                getWindow().setAttributes(lp);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            }
-        });
-
-        selfDialog.setCanceledOnTouchOutside(true);
-
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = 0.3f;
-        getWindow().setAttributes(lp);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-        selfDialog.show();
-    }
-
-
-    /**
-     * 通过反射，设置menu显示icon
-     *
-     * @param view
-     * @param menu
-     * @return
-     */
-    @SuppressLint("RestrictedApi")
-    @Override
-    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
-        if (menu != null) {
-            if (menu.getClass() == MenuBuilder.class) {
-                try {
-                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-                    m.setAccessible(true);
-                    m.invoke(menu, true);
-                } catch (Exception e) {
-                }
-            }
-        }
-        return super.onPrepareOptionsPanel(view, menu);
-    }
-
-
-    /**
-     * 展示一个SnackBar
-     */
-    public void showSnackBar(String message) {
-        //去掉虚拟按键
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION //隐藏虚拟按键栏
-                | View.SYSTEM_UI_FLAG_IMMERSIVE //防止点击屏幕时,隐藏虚拟按键栏又弹了出来
-        );
-        final Snackbar snackbar = Snackbar.make(getWindow().getDecorView(), message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("知道了", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbar.dismiss();
-                //隐藏SnackBar时记得恢复隐藏虚拟按键栏,不然屏幕底部会多出一块空白布局出来,和难看
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            }
-        }).show();
+    private void SendAddBroadCast(String type, String id){
+        //发送广播
+        Intent intent=new Intent();
+        intent.putExtra("type",type);
+        intent.putExtra("id",id);
+        intent.setAction("com.example.hyc.colorlight.demo.MQTT.Add");
+        sendBroadcast(intent);
     }
 }

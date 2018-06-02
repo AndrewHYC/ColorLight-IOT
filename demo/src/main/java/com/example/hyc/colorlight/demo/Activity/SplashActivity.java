@@ -17,6 +17,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         final Intent it = new Intent(this, HomeActivity.class); //你要转向的Activity
+//        final Intent it = new Intent(this, Home2Activity.class); //你要转向的Activity
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override

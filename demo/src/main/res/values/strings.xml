@@ -19,4 +19,8 @@
     <string name="app_name">ColorLight</string>
     <string name="action_settings">Settings</string>
     <string name="color_picker_dialog">Color Picker Dialog</string>
+    <string name="title_activity_debug">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="error_field_required">话题不能为空</string>
 </resources>

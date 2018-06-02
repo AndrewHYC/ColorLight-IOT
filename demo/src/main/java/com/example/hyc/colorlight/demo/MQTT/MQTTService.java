@@ -29,9 +29,8 @@ public class MQTTService extends Service {
 
     // private String host = "tcp://10.0.2.2:61613";
     private String host = "tcp://www.dongvdong.top:1883";
-    //    private String userName = "admin";
-//    private String passWord = "password";
-    private static String myTopic = "test\\ledx";
+
+    private static String myTopic = "ledx";
 
     private String clientId = null;
 
@@ -61,11 +60,7 @@ public class MQTTService extends Service {
     private void init() {
         // 服务器地址（协议+地址+端口号）
         String uri = host;
-//        client = new MqttAndroidClient(this, uri, clientId);
         client = new MqttAndroidClient(this,uri,clientId);
-        // 设置MQTT监听并且接受消息
-        client.setCallback(mqttCallback);
-
         conOpt = new MqttConnectOptions();
         // 清除缓存
         conOpt.setCleanSession(true);
@@ -95,6 +90,10 @@ public class MQTTService extends Service {
                 iMqttActionListener.onFailure(null, e);
             }
         }
+
+        // 设置MQTT监听并且接受消息
+        client.setCallback(mqttCallback);
+
 
         if(isConnectIsNomarl()&&doConnect){
             doClientConnection();
@@ -146,13 +145,13 @@ public class MQTTService extends Service {
         }
     };
 
+
     // MQTT监听并且接受消息
     private MqttCallback mqttCallback = new MqttCallback() {
 
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
             str1 = new String(message.getPayload());
-            Log.d(TAG, "messageArrived: gggggggggggggggggggg="+str1);
             MQTTMessage msg = new MQTTMessage();
             msg.setMessage(str1);
 
@@ -162,8 +161,14 @@ public class MQTTService extends Service {
                 intent.setAction("com.example.hyc.colorlight.demo.MQTT.MQTTService");
                 sendBroadcast(intent);
 
-            String str2 = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
-            Log.i(TAG, "messageArrived:" + str1);
+            String str2 =" topic:  "+topic + "\n message:\n "+str1+"\n\n";
+
+            //发送广播
+            Intent intent2 = new Intent();
+            intent2.putExtra("Message",str2);
+            intent2.setAction("com.example.hyc.colorlight.demo.MQTT.MQTTService2");
+            sendBroadcast(intent2);
+            Log.i(TAG, "messageArrived:" + str2);
             Log.i(TAG, str2);
         }
 
