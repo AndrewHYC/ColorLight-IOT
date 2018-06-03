@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hyc.colorlight.demo.myAdapter.StatusBarUtils;
 import com.example.hyc.colorlight.demo.myAdapter.WifiListAdapter;
 import com.example.hyc.colorlight.demo.R;
 //import com.example.hyc.colorlight.demo.wifi.ControlLight;
@@ -67,7 +68,7 @@ public class WifiConnectActivity extends BaseActivity {
 
     private WifiListAdapter adapter;
     private List<ScanResult> list = new ArrayList<>();
-    private Animation operatingAnim;
+//    private Animation operatingAnim;
 //    private boolean isConnecting;
     WifiManager wifiManager;
 
@@ -105,8 +106,10 @@ public class WifiConnectActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.colorPrimary);
         setContentView(R.layout.activity_wifi_state);
         ButterKnife.bind(this);
+
 
         //标题栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -148,9 +151,6 @@ public class WifiConnectActivity extends BaseActivity {
         } else {
             initWifi();
         }
-
-//        initWifi();
-
     }
 
     private void initWifi() {
@@ -168,9 +168,9 @@ public class WifiConnectActivity extends BaseActivity {
     }
 
     private void initView() {
-
-        operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
-        operatingAnim.setInterpolator(new LinearInterpolator());
+//
+//        operatingAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
+//        operatingAnim.setInterpolator(new LinearInterpolator());
 
         smartconfig.setOnClickListener(new View.OnClickListener() {
             @Override

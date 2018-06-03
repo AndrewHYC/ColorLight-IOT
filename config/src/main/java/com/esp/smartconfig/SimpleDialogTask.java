@@ -76,5 +76,4 @@ public abstract class SimpleDialogTask extends SimpleTask{
 
     public abstract void onResult(Object obj);
 
-
 }

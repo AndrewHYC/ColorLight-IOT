@@ -215,8 +215,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 //            ImageView imageCodeProject = new ImageView(getApplicationContext());
 //            imageCodeProject.setImageResource(R.drawable.unsuc);
 //            toastView.addView(imageCodeProject, 0);
-//            toast.show();
-            showSnackBar("请检查网络是否连接");
+//            toast.show();            showSnackBar("请检查网络是否连接");
             breathButton.setChecked(true);
           }
         }

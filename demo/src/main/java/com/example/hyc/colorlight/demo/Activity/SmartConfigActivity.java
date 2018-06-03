@@ -1,9 +1,16 @@
 package com.example.hyc.colorlight.demo.Activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -12,9 +19,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,12 +38,19 @@ import com.esp.smartconfig.sweet.OnDismissCallbackListener;
 import com.example.hyc.colorlight.demo.MyDatabaseHelper;
 import com.example.hyc.colorlight.demo.PreferenceUtil;
 import com.example.hyc.colorlight.demo.R;
+import com.example.hyc.colorlight.demo.SelfDialog;
+import com.example.hyc.colorlight.demo.myAdapter.BaseViewCommonAdapter;
+import com.example.hyc.colorlight.demo.myAdapter.WifiListAdapter;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.os.Build.VERSION_CODES.M;
 import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.ID;
 import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.NAME;
 import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.TYPE;
@@ -42,6 +59,7 @@ import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.TYPE;
  * 描述：配置smartconfig
  */
 public class SmartConfigActivity extends SweetDialogActivity{
+    private String TAG = "SmartConfigActivity";
 
     private String name;
     private String type;
@@ -97,8 +115,6 @@ public class SmartConfigActivity extends SweetDialogActivity{
         String apSsid = EspWifiAdminSimple.getWifiConnectedSsid(this);
         if (apSsid != null) {
             tv_ssid.setText(apSsid);
-        } else {
-            tv_ssid.setText("");
         }
         et_psw.setText(PreferenceUtil.getInstance().getPSW());
         // check whether the wifi is connected
@@ -120,118 +136,116 @@ public class SmartConfigActivity extends SweetDialogActivity{
             @Override
             public void onClick(View v) {
 
-                //判断是否存在空值
                 String ssid = tv_ssid.getText().toString();
+
+                //判断是否存在空值
                 String password = et_psw.getText().toString();
 
                 if(TextUtils.isEmpty(ssid)){
-                    Toast.makeText(SmartConfigActivity.this, "确定是否连上wifi", Toast.LENGTH_SHORT).show();
+                    tv_ssid.setError("Wifi账号不能为空");
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)){
-                    Toast.makeText(SmartConfigActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 String apBssid = EspWifiAdminSimple.getWifiConnectedBssid(SmartConfigActivity.this);
+
                 smartconfig(ssid,apBssid,password);
             }
         });
     }
-
     /**
-     * @开始一键配置
-     **/
-    private void smartconfig(final String apSsid, final String apBssid, final String apPassword){
-        Log.d("smartconfig","mEdtApSsid = " + apSsid
-                + ", " + " mEdtApPassword = " + apPassword);
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
-            return;
-        }
-        task = new SimpleDialogTask(this) {
-
-            private IEsptouchTask mEsptouchTask;
-
-            @Override
-            public Object onAsync() {
-                mEsptouchTask = new EsptouchTask(apSsid, apBssid, apPassword, SmartConfigActivity.this);
-                List<IEsptouchResult> resultList = mEsptouchTask.executeForResults(1);
-                return resultList;
+         * @开始一键配置
+         **/
+        private void smartconfig(final String apSsid, final String apBssid, final String apPassword){
+            Log.d("smartconfig","mEdtApSsid = " + apSsid
+                    + ", " + " mEdtApPassword = " + apPassword);
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                return;
             }
 
-            @Override
-            public void onResult(Object obj) {
-                List<IEsptouchResult> result = (List<IEsptouchResult>) obj;
-                if(result != null && result.size()>0){
-                    IEsptouchResult firstResult = result.get(0);
-                    // check whether the task is cancelled and no results received
-                    if (!firstResult.isCancelled()) {
-                        int count = 0;
-                        // max results to be displayed, if it is more than maxDisplayCount,
-                        // just show the count of redundant ones
-                        final int maxDisplayCount = 5;
-                        // the task received some results including cancelled while
-                        // executing before receiving enough results
-                        if (firstResult.isSuc()) {
-                            StringBuilder sb = new StringBuilder();
-                            for (IEsptouchResult resultInList : result) {
-                                sb.append("配置成功\n"
-                                        + "IP地址 = "
-                                        + resultInList.getInetAddress()
-                                        .getHostAddress() + "\n");
-                                count++;
-                                PreferenceUtil.getInstance().writePreferences(PreferenceUtil.IP,resultInList.getInetAddress()
-                                        .getHostAddress());
-                                if (count >= maxDisplayCount) {
-                                    break;
-                                }
-                            }
-                            if (count < result.size()) {
-                                sb.append("\nthere's " + (result.size() - count)
-                                        + " more result(s) without showing\n");
-                            }
-                            onToast(new OnDismissCallbackListener(sb.toString()){
-                                @Override
-                                public void onCallback() {
-                                    PreferenceUtil.getInstance().writePreferences(PreferenceUtil.PSW,apPassword);
-                                    finish();
-                                }
-                            });
+            task = new SimpleDialogTask(this) {
 
-                            //=====更新数据库======//
-                            MyDatabaseHelper databaseHelper = new MyDatabaseHelper(SmartConfigActivity.this);
-                            SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                            ContentValues values = new ContentValues();
-                            values.put("isConfig",1);
-                            db.update("Light",values,"id = ? && type = ? ",new String[]{id,name});
-                            //===========================//
+                private IEsptouchTask mEsptouchTask;
 
-                            if(type.equals("爱心灯")){
-                                Intent intent = new Intent(SmartConfigActivity.this, MainActivity.class);
-                                intent.putExtra(WifiConnectActivity.TYPE, type);
-                                intent.putExtra(WifiConnectActivity.ID, id);
-                                intent.putExtra(WifiConnectActivity.NAME, name);
-                                startActivity(intent);
-                            }else if(type.equals("")){
-                                Intent intent = new Intent(SmartConfigActivity.this, HomeActivity.class);
-                                startActivity(intent);
+                @Override
+                public Object onAsync() {
+                    mEsptouchTask = new EsptouchTask(apSsid, apBssid, apPassword, SmartConfigActivity.this);
+                    List<IEsptouchResult> resultList = mEsptouchTask.executeForResults(1);
+                    return resultList;
+                }
+
+                @Override
+                public void onResult(Object obj) {
+                    List<IEsptouchResult> result = (List<IEsptouchResult>) obj;
+                    if(result != null && result.size()>0){
+                        IEsptouchResult firstResult = result.get(0);
+                        // check whether the task is cancelled and no results received
+                        if (!firstResult.isCancelled()) {
+                            int count = 0;
+                            // max results to be displayed, if it is more than maxDisplayCount,
+                            // just show the count of redundant ones
+                            final int maxDisplayCount = 5;
+                            // the task received some results including cancelled while
+                            // executing before receiving enough results
+                            if (firstResult.isSuc()) {
+                                StringBuilder sb = new StringBuilder();
+                                for (IEsptouchResult resultInList : result) {
+                                    sb.append("配置成功\n"
+                                            + "IP地址 = "
+                                            + resultInList.getInetAddress()
+                                            .getHostAddress() + "\n");
+                                    count++;
+                                    PreferenceUtil.getInstance().writePreferences(PreferenceUtil.IP,resultInList.getInetAddress()
+                                            .getHostAddress());
+                                    if (count >= maxDisplayCount) {
+                                        break;
+                                    }
+                                }
+                                if (count < result.size()) {
+                                    sb.append("\nthere's " + (result.size() - count)
+                                            + " more result(s) without showing\n");
+                                }
+                                onToast(new OnDismissCallbackListener(sb.toString()){
+                                    @Override
+                                    public void onCallback() {
+                                        PreferenceUtil.getInstance().writePreferences(PreferenceUtil.PSW,apPassword);
+
+                                        //=====更新数据库======//
+                                        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(SmartConfigActivity.this);
+                                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                        ContentValues values = new ContentValues();
+                                        values.put("isConfig",1);
+                                        db.update("Light",values,"id = ? && type = ? ",new String[]{id,name});
+                                        //===========================//
+
+                                        if(type.equals("爱心灯")){
+                                            Intent intent = new Intent(SmartConfigActivity.this, MainActivity.class);
+                                            intent.putExtra(WifiConnectActivity.TYPE, type);
+                                            intent.putExtra(WifiConnectActivity.ID, id);
+                                            intent.putExtra(WifiConnectActivity.NAME, name);
+                                            startActivity(intent);
+                                        }else if(type.equals("")){
+                                            Intent intent = new Intent(SmartConfigActivity.this, HomeActivity.class);
+                                            startActivity(intent);
+                                        }
+                                        finish();
+                                    }
+                                });
+                            } else {
+                                onToastErrorMsg("配置失败\n请确保智能终端打开了一键配置模式");
                             }
-                        } else {
-                            onToastErrorMsg("配置失败\n请确保智能终端打开了配置模式");
                         }
                     }
                 }
-            }
 
-            @Override
-            protected void onCancelled() {
-                super.onCancelled();
-                if (mEsptouchTask != null) {
-                    mEsptouchTask.interrupt();
+                @Override
+                protected void onCancelled() {
+                    super.onCancelled();
+                    if (mEsptouchTask != null) {
+                        mEsptouchTask.interrupt();
+                    }
                 }
-            }
-        };
+            };
 
-        task.startTask("正在配置中，请稍候....");
-    }
+            task.startTask("正在配置中，请稍候....\n请将手机靠近智能终端");
+        }
 }

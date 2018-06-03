@@ -41,23 +41,29 @@
                 android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorPrimary"
                 android:text="@string/ssid"/>
 
             <TextView
+                android:layout_marginTop="10dp"
                 android:id="@+id/tv_ssid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                android:text=""/>
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:paddingLeft="40dp"
+                android:hint="请确保已连接Wifi"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/md_grey_500"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:background="@drawable/spinner_shape"/>
 
             <TextView
                 android:id="@+id/tv_psw"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorPrimary"
                 android:text="@string/psw"/>
 
             <EditText

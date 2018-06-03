@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/home/hyc/Coding/Android/ColorLight/library/build/intermediates/intermediate-jars/release/classes.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="860e17827dd7b948f2fa3dec25adb87e7af53a07">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/33.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/Coding/Android/ColorLight/config/build/intermediates/intermediate-jars/release/classes.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="7e7d0c487725b1aec95b3378cb12889e15de5df8">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/35.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife-annotations/8.6.0/48efa6f14074e1a6b16e02ac05eba3fc5c7c7ec8/butterknife-annotations-8.6.0.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="48efa6f14074e1a6b16e02ac05eba3fc5c7c7ec8">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/17.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/.gradle/caches/transforms-1/files-1.1/MagicIndicator-1.5.0.aar/9343bb453052faf26f1e536e50334a86/jars/classes.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="cc9c68aa8e850407de6231285bfd776aad227517">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/Coding/Android/ColorLight/library1/build/intermediates/intermediate-jars/release/classes.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="13df9afa57d51aaf9e53545e4e4d99a9ead26930">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/34.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.1.5/ece7b5d0870e66d8226dab6dcf47a2b12afff061/rxjava-1.1.5.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="ece7b5d0870e66d8226dab6dcf47a2b12afff061">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/15.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/.gradle/caches/transforms-1/files-1.1/rxpermissions-0.8.2.aar/04cd0b506a93a44501ea8d84bdb2180d/jars/classes.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="82a147f2eb902b49e080ad5f79a6298115c69bb7">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/14.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/hyc/.gradle/caches/transforms-1/files-1.1/butterknife-8.6.0.aar/daf7a6488c05d8a48de761bd267612d1/jars/classes.jar"
+        jumboMode="false"
+        min-sdk-version="19"
+        optimize="true"
+        revision="26.0.2"
+        sha1="be587097e648eabfb7f9eca23ab03369894e2d5d">
+        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/13.jar" />
+    </item>
+
+</items>

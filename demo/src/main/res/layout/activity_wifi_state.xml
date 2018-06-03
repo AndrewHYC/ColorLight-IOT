@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.hyc.colorlight.demo.Activity.WifiConnectActivity">
 
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -25,16 +25,7 @@
                 android:theme="@style/ToolBarStyle"
                 app:layout_scrollFlags="scroll|enterAlways|snap"/>
         </android.support.design.widget.AppBarLayout>
-
-        <!--<ImageView-->
-        <!--android:id="@+id/main_setting"-->
-        <!--android:src="@mipmap/main_setting"-->
-        <!--android:padding="5dp"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="40dp" />-->
-
-
-
+        
     <ImageView
             android:layout_margin="10dp"
             android:layout_below="@+id/AppbarLayout_wifi"
