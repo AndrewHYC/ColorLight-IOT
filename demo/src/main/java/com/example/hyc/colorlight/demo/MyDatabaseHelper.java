@@ -15,6 +15,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_LIGHT = "create table Light("
             +"name text,"
+            +"type text,"
+            +"isConfig integer,"
             +"id text)";
     private Context mContext;
 

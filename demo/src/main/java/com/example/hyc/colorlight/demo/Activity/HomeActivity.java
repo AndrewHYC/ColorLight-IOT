@@ -267,9 +267,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
             if (data != null) {
 
-                String new_light_id = data.getStringExtra(Constant.CODED_CONTENT);
-                Log.d(TAG, "onActivityResult: Result:"+new_light_id);
-                SendAddBroadCast(null,new_light_id);
+                String type = null;
+                String result = data.getStringExtra(Constant.CODED_CONTENT);
+                String[] arr = result.split("/");
+                Log.d(TAG, "onActivityResult: arr[0]="+arr[0]);
+                if(arr[0].equals("other")){
+                    type = "其他";
+                }else if(arr[0].equals("lamp")){
+                    type = "爱心灯";
+                }
+                SendAddBroadCast(type,arr[1]);
             }
         }
     }

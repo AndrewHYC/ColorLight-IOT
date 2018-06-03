@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="types">
+        <item>爱心灯</item>
+        <item>其他</item>
+    </string-array>
+</resources>

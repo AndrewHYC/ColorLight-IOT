@@ -6,11 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.hyc.colorlight.demo.Activity.WifiConnectActivity;
 
 import static android.content.ContentValues.TAG;
 
@@ -20,6 +26,8 @@ import static android.content.ContentValues.TAG;
 
 public class SelfDialog extends Dialog {
 
+    private boolean notchecked = true;
+    private boolean fromSYS = false;
 
     private Button yes;//确定按钮
     private Button no;//取消按钮
@@ -30,7 +38,10 @@ public class SelfDialog extends Dialog {
 //    private String messageStr;//从外界设置的消息文本
     private String new_light_name = null;
     private String new_light_id = null;
-    private TextView warrningText = null;
+    private String new_type = "其他";
+    private Spinner spinner;
+    private ArrayAdapter spinner_adapter;
+
 
     //确定文本和取消文本的显示内容
     private String yesStr, noStr;
@@ -55,12 +66,12 @@ public class SelfDialog extends Dialog {
         /**
          * 回调函数，用于在Dialog的监听事件触发后刷新Activity的UI显示
          */
-        public void refreshPriorityUI(String name, String id);
+        public void refreshPriorityUI(String name, String type, String id);
     }
 
 
 
-    public SelfDialog(Context context,String Id, String str, PriorityListener listener) {
+    public SelfDialog(Context context,String type,String Id, String str, PriorityListener listener) {
         super(context, R.style.MyDialog);
         if(str != null){
             yesStr = str;
@@ -68,6 +79,11 @@ public class SelfDialog extends Dialog {
         if(Id != null){
             new_light_id = Id;
         }
+        if(type != null){
+            this.new_type = type;
+            fromSYS = true;
+        }
+        Log.d(TAG, "SelfDialog: new_type="+type);
         this.yesListener = listener;
     }
 
@@ -103,8 +119,15 @@ public class SelfDialog extends Dialog {
                                 ||dialog_light_name_text.getText().toString().equals("DEBUG")){
                             new_light_name = "调试";
                             new_light_id = "";
+                            new_type = "其他";
                             dismiss();
-                            yesListener.refreshPriorityUI(new_light_name, new_light_id);
+                            yesListener.refreshPriorityUI(new_light_name, new_type, new_light_id);
+//
+//                            Intent intent = new Intent(getContext(), WifiConnectActivity.class);
+//                            intent.putExtra(WifiConnectActivity.TYPE, new_type);
+//                            intent.putExtra(WifiConnectActivity.ID, new_light_id);
+//                            intent.putExtra(WifiConnectActivity.NAME, new_light_name);
+//                            getContext().startActivity(intent);
 
                         }else{
                             dialog_light_id_text.setError("不能没有产品ID哦");
@@ -113,7 +136,7 @@ public class SelfDialog extends Dialog {
                         }
                     }else{
                         if(dialog_light_name_text.getText().toString().equals("")){
-                            new_light_name = "爱心灯";
+                            new_light_name = new_type;
                         }else{
                             Log.d(TAG, "onClick: "+dialog_light_name_text.getText().toString());
                             new_light_name = dialog_light_name_text.getText().toString();
@@ -122,7 +145,13 @@ public class SelfDialog extends Dialog {
                         new_light_id = dialog_light_id_text.getText().toString();
 
                         dismiss();
-                        yesListener.refreshPriorityUI(new_light_name, new_light_id);
+                        yesListener.refreshPriorityUI(new_light_name, new_type, new_light_id);
+
+                        Intent intent = new Intent(getContext(), WifiConnectActivity.class);
+                        intent.putExtra(WifiConnectActivity.TYPE, new_type);
+                        intent.putExtra(WifiConnectActivity.ID, new_light_id);
+                        intent.putExtra(WifiConnectActivity.NAME, new_light_name);
+                        getContext().startActivity(intent);
                     }
 
 
@@ -170,7 +199,38 @@ public class SelfDialog extends Dialog {
         if(new_light_id != null){
             dialog_light_id_text.setText(new_light_id);
         }
-        warrningText = (TextView)findViewById(R.id.warning);
+        spinner = (Spinner)findViewById(R.id.dialog_type_choose);
+        spinner_adapter = ArrayAdapter.createFromResource(getContext(), R.array.types, R.layout.spinner_con);
+        //设置下拉列表的风格
+        spinner_adapter.setDropDownViewResource(R.layout.spinner_layout);
+        spinner.setAdapter(spinner_adapter);
+        spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+        spinner.setVisibility(View.VISIBLE);
+        if(new_type.equals("爱心灯")){
+            spinner.setSelection(0, true);
+        }else{
+            spinner.setSelection(1, true);   //记得将其设置为其他
+        }
+    }
+
+    //使用数组形式操作
+    class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+                                   long arg3) {
+
+
+            if(notchecked && !fromSYS){
+                arg1.setVisibility(View.INVISIBLE);
+            }else {
+                new_type = (String) spinner_adapter.getItem(arg2);
+//                arg1.setVisibility(View.VISIBLE);
+            }
+            notchecked = false;
+        }
+
+        public void onNothingSelected(AdapterView<?> arg0) {
+        }
     }
 
     /**
@@ -202,4 +262,13 @@ public class SelfDialog extends Dialog {
     public interface onNoOnclickListener {
         public void onNoClick();
     }
+
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        if (noOnclickListener != null) {
+            noOnclickListener.onNoClick();
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
 }

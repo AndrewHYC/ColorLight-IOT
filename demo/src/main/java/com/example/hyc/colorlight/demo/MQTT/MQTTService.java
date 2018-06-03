@@ -30,7 +30,7 @@ public class MQTTService extends Service {
     // private String host = "tcp://10.0.2.2:61613";
     private String host = "tcp://www.dongvdong.top:1883";
 
-    private static String myTopic = "ledx";
+    private String myTopic = "ledx";
 
     private String clientId = null;
 
@@ -46,7 +46,7 @@ public class MQTTService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public static void publish(String msg){
+    public void publish(String msg){
         String topic = myTopic;
         Integer qos = 0;
         Boolean retained = false;

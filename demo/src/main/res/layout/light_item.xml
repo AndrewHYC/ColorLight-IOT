@@ -23,15 +23,18 @@
 
             <TextView
                 android:id="@+id/light_name"
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.5"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:textSize="20dp"
+                android:textSize="24dp"
                 android:textColor="#FF4081"
-                android:lines="2"
+                android:lines="1"
                 android:ellipsize="end"/>
 
             <View
@@ -41,17 +44,32 @@
 
             <TextView
                 android:id="@+id/light_id"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_weight="1.8"
+                android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:gravity="center_vertical"
-                android:textSize="18dp"
+                android:gravity="left"
+                android:textSize="15dp"
                 android:textColor="@color/colorAccent"
-                android:lines="2"
+                android:lines="1"
                 android:ellipsize="end"/>
 
+
+            <TextView
+                android:id="@+id/light_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:textColor="@color/colorAccent"
+                android:lines="1"
+                android:ellipsize="end"/>
 
         </LinearLayout>
 

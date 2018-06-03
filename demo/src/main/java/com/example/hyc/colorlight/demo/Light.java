@@ -7,7 +7,26 @@ package com.example.hyc.colorlight.demo;
 public class Light {
     private String name;
     private String id;
+    private String type;
     private int imageId;
+    private int isConfig;
+
+    public int getIsConfig() {
+        return isConfig;
+    }
+
+    public void setIsConfig(int isConfig) {
+        this.isConfig = isConfig;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 
     public String getNewColor() {
         return newColor;
@@ -31,12 +50,12 @@ public class Light {
         this.newColor = newColor;
     }
 
-
-
-    public Light(String name, int imageId, String id){
+    public Light(String name,String type, int imageId, String id,int isConfig){
         this.name = name;
+        this.type = type;
         this.imageId = imageId;
         this.id = id;
+        this.isConfig = isConfig;
     }
 
     public int getImageId() {

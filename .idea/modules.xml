@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ColorLight.iml" filepath="$PROJECT_DIR$/ColorLight.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/library1/library1.iml" filepath="$PROJECT_DIR$/library1/library1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartconfig/smartconfig.iml" filepath="$PROJECT_DIR$/smartconfig/smartconfig.iml" />
     </modules>
   </component>
 </project>

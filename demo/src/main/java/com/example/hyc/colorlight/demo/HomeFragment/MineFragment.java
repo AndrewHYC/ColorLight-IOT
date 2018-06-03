@@ -1,13 +1,11 @@
 package com.example.hyc.colorlight.demo.HomeFragment;
 
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,13 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.example.hyc.colorlight.demo.Activity.HomeActivity;
 import com.example.hyc.colorlight.demo.Menu;
 import com.example.hyc.colorlight.demo.R;
+import com.example.hyc.colorlight.demo.myAdapter.MenuAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +70,8 @@ public class MineFragment extends Fragment{
     }
 
     private void initMenu() {
+        Menu setting = new Menu("一键配置",R.drawable.setting,R.drawable.next);
+        menuList.add(setting);
         Menu howtouse = new Menu("用户教程", R.drawable.questions, R.drawable.next);
         menuList.add(howtouse);
         Menu aboutus = new Menu("关于我们", R.drawable.about, R.drawable.next);

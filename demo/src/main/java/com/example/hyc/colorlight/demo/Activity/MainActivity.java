@@ -31,6 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -45,6 +46,9 @@ import com.example.hyc.colorlight.demo.LightFragment.ColorFragment;
 import com.example.hyc.colorlight.demo.LightFragment.DemoFragment;
 import com.example.hyc.colorlight.demo.MQTT.MQTTService;
 import com.example.hyc.colorlight.demo.R;
+import com.yzq.zxinglibrary.android.CaptureActivity;
+import com.yzq.zxinglibrary.bean.ZxingConfig;
+import com.yzq.zxinglibrary.common.Constant;
 
 //implements ColorPickerDialogListener
 public class MainActivity extends AppCompatActivity implements DemoFragment.FragmentInteraction,
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
 
   MQTTService myService = new MQTTService();
   private String lightId;
+  private String lightName;
   private String newColor;
   Intent serviceIntent;
 
@@ -77,9 +82,13 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     setContentView(R.layout.activity_main);
 
     Intent intent = getIntent();
-    String lightName = intent.getStringExtra(LIGHT_NAME);
+    lightName = intent.getStringExtra(LIGHT_NAME);
     int lightImageId = intent.getIntExtra(LIGHT_IMAGE_ID, 0);
     lightId = intent.getStringExtra(LIGHT_ID);
+    boolean isConfig = intent.getBooleanExtra("isConfig",false);
+    if(!isConfig){
+      showSnackBar("请先进行配置");
+    }
     Log.d(TAG, "onCreate: lightId="+lightId);
 
     //监测网络是否连接
@@ -102,7 +111,9 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
           tmpInt =0;
         }
 
-        myService.publish(String.valueOf(tmpInt));
+        String brightness = "{\"ledmode\":1,\"cl\":"+String.valueOf(tmpInt)+"}";
+
+        myService.publish(brightness);
 
       }
 
@@ -170,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
       @Override
       public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if(b){
-          String json = "{\"ledmode\":1,\"cc\":1}";
+          String json = "{\"ledmode\":3,\"cc\":1}";
 //          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
 
           if (info != null && info.isAvailable()) {
@@ -190,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
             breathButton.setChecked(false);
           }
         }else{
-          String json = "{\"ledmode\":1,\"cc\":0}";
+          String json = "{\"ledmode\":3,\"cc\":0}";
 //          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
           if (info != null && info.isAvailable()) {
               myService.publish(json);
@@ -229,6 +240,13 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
       case android.R.id.home:
             stopService(serviceIntent);
         finish();
+        return true;
+      case R.id.config:
+        Intent intent = new Intent(MainActivity.this, WifiConnectActivity.class);
+        intent.putExtra(WifiConnectActivity.ID, lightId);
+        intent.putExtra(WifiConnectActivity.NAME, lightName);
+        intent.putExtra(WifiConnectActivity.TYPE, "爱心灯");
+        startActivity(intent);
         return true;
     }
     return super.onOptionsItemSelected(item);
@@ -294,6 +312,14 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
       showSnackBar("请检查网络是否连接");
     }
   }
+
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.config,menu);
+    return true;
+  }
+
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent event) {

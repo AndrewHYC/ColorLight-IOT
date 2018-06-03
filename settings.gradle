@@ -1,1 +1,1 @@
-include ':demo', ':library', ':library1'
+include ':demo', ':library', ':library1', ':smartconfig', ':config'

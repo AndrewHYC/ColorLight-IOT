@@ -21,9 +21,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,15 +30,11 @@ import com.example.hyc.colorlight.demo.Light;
 import com.example.hyc.colorlight.demo.MyDatabaseHelper;
 import com.example.hyc.colorlight.demo.R;
 import com.example.hyc.colorlight.demo.SelfDialog;
-import com.yzq.zxinglibrary.android.CaptureActivity;
-import com.yzq.zxinglibrary.bean.ZxingConfig;
-import com.yzq.zxinglibrary.common.Constant;
+import com.example.hyc.colorlight.demo.myAdapter.LightAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by hyc on 18-6-1.
@@ -78,14 +71,19 @@ public class DeviceFragment extends Fragment {
 
         //=======================database=================//
         boolean isTableExist=true;
+
         SQLiteDatabase db0= getContext().openOrCreateDatabase("LightStore.db", 0, null);
         Cursor c=db0.rawQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='Light'", null);
         Log.d(TAG, "onCreate: cursor.Count="+c.getColumnCount());
+        Log.d(TAG, "onCreate: light = "+c.getCount());
+
         if (c.getCount()==0) {
             isTableExist=false;
         }
+
         c.close();
         db0.close();
+
         if(isTableExist == false){
             databaseHelper = new MyDatabaseHelper(getContext(),"LightStore.db",null,1);
         }else{
@@ -110,21 +108,23 @@ public class DeviceFragment extends Fragment {
                 //遍历Cursor对象,并取出数据
                 String name = cursor.getString(cursor.getColumnIndex("name"));
                 String id = cursor.getString(cursor.getColumnIndex("id"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                int isConfig = cursor.getInt(cursor.getColumnIndex("isConfig"));
                 switch (i%5){
                     case 0:
-                        lights[i] = new Light(name,R.drawable.light1,id);
+                        lights[i] = new Light(name,type,R.drawable.light1,id,isConfig);
                         break;
                     case 1:
-                        lights[i] = new Light(name,R.drawable.light2,id);
+                        lights[i] = new Light(name,type,R.drawable.light2,id,isConfig);
                         break;
                     case 2:
-                        lights[i] = new Light(name,R.drawable.light3,id);
+                        lights[i] = new Light(name,type,R.drawable.light3,id,isConfig);
                         break;
                     case 3:
-                        lights[i] = new Light(name,R.drawable.light4,id);
+                        lights[i] = new Light(name,type,R.drawable.light4,id,isConfig);
                         break;
                     case 4:
-                        lights[i] = new Light(name,R.drawable.light5,id);
+                        lights[i] = new Light(name,type,R.drawable.light5,id,isConfig);
                         break;
                     default:
                         break;
@@ -215,6 +215,7 @@ public class DeviceFragment extends Fragment {
         };
     }
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_device, container,false);
@@ -240,6 +241,8 @@ public class DeviceFragment extends Fragment {
         {
             values.put("name",lightList.get(i).getName());
             values.put("id",lightList.get(i).getId());
+            values.put("type",lightList.get(i).getType());
+            values.put("isConfig",lightList.get(i).getIsConfig());
             db.insert("Light",null,values);
             values.clear();
         }
@@ -273,7 +276,7 @@ public class DeviceFragment extends Fragment {
         //====================================================//
     }
 
-    private void updateHomeView(String new_light_name, String new_light_id)
+    private void updateHomeView(String new_light_name, String new_type, String new_light_id,int isConfig)
     {
         if(new_light_name!=null&&new_light_id!=null)
         {
@@ -282,19 +285,19 @@ public class DeviceFragment extends Fragment {
 
             switch (lights.length%5){
                 case 0:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light1,new_light_id);
+                    temlights[lights.length] = new Light(new_light_name,new_type,R.drawable.light1,new_light_id,isConfig);
                     break;
                 case 1:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light2,new_light_id);
+                    temlights[lights.length] = new Light(new_light_name,new_type,R.drawable.light2,new_light_id,isConfig);
                     break;
                 case 2:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light3,new_light_id);
+                    temlights[lights.length] = new Light(new_light_name,new_type,R.drawable.light3,new_light_id,isConfig);
                     break;
                 case 3:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light4,new_light_id);
+                    temlights[lights.length] = new Light(new_light_name,new_type,R.drawable.light4,new_light_id,isConfig);
                     break;
                 case 4:
-                    temlights[lights.length] = new Light(new_light_name,R.drawable.light5,new_light_id);
+                    temlights[lights.length] = new Light(new_light_name,new_type,R.drawable.light5,new_light_id,isConfig);
                     break;
                 default:
                     break;
@@ -309,25 +312,26 @@ public class DeviceFragment extends Fragment {
             ContentValues values = new ContentValues();
             values.put("name",new_light_name);
             values.put("id",new_light_id);
+            values.put("type",new_type);
+            values.put("isConfig",isConfig);
             long i = db.insert("Light",null,values);
             Toast.makeText(view.getContext(),"添加成功",Toast.LENGTH_SHORT).show();
             //=====================================================//
 
             adapter = new LightAdapter(lightList);
             recyclerView.setAdapter(adapter);
-
         }
     }
 
-    private void callSelfDialog(String id){
-        selfDialog = new SelfDialog(view.getContext(),id,"确定",new SelfDialog.PriorityListener() {
+    private void callSelfDialog(String type, String id){
+        selfDialog = new SelfDialog(view.getContext(),type,id,"确定",new SelfDialog.PriorityListener() {
             @Override
-            public void refreshPriorityUI(String new_light_name, String new_light_id) {
+            public void refreshPriorityUI(String new_light_name, String new_type, String new_light_id) {
                 WindowManager.LayoutParams lp = ((AppCompatActivity) getActivity()).getWindow().getAttributes();
                 lp.alpha = 1.0f;
                 ((AppCompatActivity) getActivity()).getWindow().setAttributes(lp);
                 ((AppCompatActivity) getActivity()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                updateHomeView(new_light_name, new_light_id);
+                updateHomeView(new_light_name, new_type, new_light_id,0);
             }
         });
 
@@ -351,32 +355,6 @@ public class DeviceFragment extends Fragment {
 
         selfDialog.show();
     }
-
-
-
-//
-//    /**
-//     * 通过反射，设置menu显示icon
-//     *
-//     * @param view
-//     * @param menu
-//     * @return
-//     */
-//    @SuppressLint("RestrictedApi")
-//    @Override
-//    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
-//        if (menu != null) {
-//            if (menu.getClass() == MenuBuilder.class) {
-//                try {
-//                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-//                    m.setAccessible(true);
-//                    m.invoke(menu, true);
-//                } catch (Exception e) {
-//                }
-//            }
-//        }
-//        return super.onPrepareOptionsPanel(view, menu);
-//    }
 
 
     /**
@@ -404,7 +382,8 @@ public class DeviceFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             String type = intent.getStringExtra("type");
             String id = intent.getStringExtra("id");
-            callSelfDialog(id);
+            Log.d(TAG, "onReceive: AddRecevier="+type);
+            callSelfDialog(type,id);
         }
     }
 }

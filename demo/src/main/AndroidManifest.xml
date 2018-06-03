@@ -23,6 +23,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -60,17 +66,23 @@
             android:name=".MQTT.MQTTService"
             android:enabled="true"
             android:exported="true" />
-
-        <activity android:name=".Activity.Home2Activity"></activity>
-
         <service
             android:name=".MQTT.UpdateService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".Activity.DebugActivity"
-            android:label="@string/title_activity_debug"></activity>
+            android:label="@string/title_activity_debug" />
+        <activity android:name=".Activity.OtherActivity" />
+        <activity android:name=".Activity.BaseActivity"/>
+        <activity android:name=".Activity.WifiConnectActivity"
+            android:theme="@style/Theme.Actionbar">
+
+        </activity>
+        <activity android:name="com.esp.smartconfig.SweetDialogActivity"/>
+
+        <activity android:name=".Activity.SmartConfigActivity"></activity>
     </application>
 
 </manifest>

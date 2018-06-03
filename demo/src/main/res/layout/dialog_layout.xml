@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:text="添加新爱心灯"
+            android:text="添加新设备"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
 
@@ -51,6 +51,36 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="bottom"
+                android:id="@+id/dialog_type"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textColor="#38ADFF"
+                android:text="种类:"
+                android:textSize="20dp"/>
+
+            <Spinner
+                android:id="@+id/dialog_type_choose"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/spinner_shape"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@+id/dialog_type"
+                android:animationCache="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center">
             <TextView
                 android:layout_marginTop="10dp"
@@ -62,7 +92,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textColor="#38ADFF"
-                android:text="I    D:"
+                android:text=" I   D:"
                 android:textSize="20dp"/>
 
             <EditText
@@ -74,14 +104,6 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/warning"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FF4081"
-            android:textSize="20dp"
-            android:gravity="center"
-            android:layout_gravity="center"/>
 
         <View
             android:layout_width="match_parent"

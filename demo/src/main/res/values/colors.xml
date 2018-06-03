@@ -89,7 +89,7 @@
 
   <!-- orange -->
   <color name="md_orange_500">#ff9800</color>
-
+  <color name="md_orange_600">#ff7700</color>
   <!-- deep_orange -->
   <color name="md_deep_orange_500">#ff5722</color>
 
