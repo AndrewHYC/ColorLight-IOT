@@ -19,7 +19,7 @@ import android.widget.ListView;
 
 import com.example.hyc.colorlight.demo.Menu;
 import com.example.hyc.colorlight.demo.R;
-import com.example.hyc.colorlight.demo.myAdapter.MenuAdapter;
+import com.example.hyc.colorlight.demo.Adapter.MenuAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

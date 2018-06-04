@@ -10,9 +10,14 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +35,15 @@ import com.example.hyc.colorlight.demo.Light;
 import com.example.hyc.colorlight.demo.MyDatabaseHelper;
 import com.example.hyc.colorlight.demo.R;
 import com.example.hyc.colorlight.demo.SelfDialog;
-import com.example.hyc.colorlight.demo.myAdapter.LightAdapter;
+import com.example.hyc.colorlight.demo.Adapter.LightAdapter;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +59,7 @@ public class DeviceFragment extends Fragment {
 
     private Light[] lights;// = {new Light("Light Name",R.drawable.light2,"ID Number")};
     private SelfDialog selfDialog;
-    private RecyclerView recyclerView;
+    private SwipeMenuRecyclerView recyclerView;
 
     private List<Light> lightList = new ArrayList<>();
 
@@ -57,7 +70,7 @@ public class DeviceFragment extends Fragment {
     private int position;  //左滑删除时获取位置
 
     private static String TAG = "DeviceFragment";
-    ItemTouchHelper.SimpleCallback callback;
+//    ItemTouchHelper.SimpleCallback callback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,87 +145,6 @@ public class DeviceFragment extends Fragment {
                 i++;
             }while(cursor.moveToNext());
         }
-
-
-        callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,
-                ItemTouchHelper.START | ItemTouchHelper.END) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getAdapterPosition();
-                int toPosition = target.getAdapterPosition();
-                if (fromPosition < toPosition) {
-                    for (int i = fromPosition; i < toPosition; i++) {
-                        Collections.swap(lightList, i, i + 1);
-                    }
-                } else {
-                    for (int i = fromPosition; i > toPosition; i--) {
-                        Collections.swap(lightList, i, i - 1);
-                    }
-                }
-
-                updateSQLiteData();
-
-                adapter.notifyItemMoved(fromPosition, toPosition);
-                return true;
-            }
-
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                position = viewHolder.getAdapterPosition();
-                Log.d(TAG, "onSwiped: "+direction);
-                if(direction == 32){
-                    final AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
-                    dialog.setTitle("警告");
-                    dialog.setMessage("确定要删除吗?");
-                    dialog.setCancelable(true);
-                    dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            deleteValue();
-                        }
-                    });
-                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            recyclerView.setAdapter(adapter);
-                        }
-                    });
-                    dialog.show();
-                }else{
-
-                    final AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
-                    dialog.setTitle("警告");
-                    dialog.setMessage("确定要删除吗?");
-                    dialog.setCancelable(true);
-                    dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            deleteValue();
-                        }
-                    });
-                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            recyclerView.setAdapter(adapter);
-                        }
-                    });
-                    dialog.show();
-                }
-
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    final float alpha = 1 - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
-                    viewHolder.itemView.setAlpha(alpha);
-                    viewHolder.itemView.setTranslationX(dX);
-                }
-            }
-        };
     }
 
 
@@ -220,18 +152,93 @@ public class DeviceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_device, container,false);
 
-        recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view1);
+        recyclerView = (SwipeMenuRecyclerView)view.findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(),1);
         recyclerView.setLayoutManager(layoutManager);
 
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setLongPressDragEnabled(true); // 拖拽排序，默认关闭。
+        recyclerView.setItemViewSwipeEnabled(false); // 策划删除，默认关闭。
+
+        OnItemMoveListener mItemMoveListener = new OnItemMoveListener() {
+
+            @Override
+            public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
+                // 不同的ViewType不能拖拽换位置。
+                if (srcHolder.getItemViewType() != targetHolder.getItemViewType()) return false;
+
+                // 真实的Position：通过ViewHolder拿到的position都需要减掉HeadView的数量。
+                int fromPosition = srcHolder.getAdapterPosition() - recyclerView.getHeaderItemCount();
+                int toPosition = targetHolder.getAdapterPosition() - recyclerView.getHeaderItemCount();
+
+                if (fromPosition < toPosition)
+                    for (int i = fromPosition; i < toPosition; i++)
+                        Collections.swap(lightList, i, i + 1);
+                else
+                    for (int i = fromPosition; i > toPosition; i--)
+                        Collections.swap(lightList, i, i - 1);
+                updateSQLiteData();
+                adapter.notifyItemMoved(fromPosition, toPosition);
+                return true;
+            }
+
+            @Override
+            public void onItemDismiss(RecyclerView.ViewHolder srcHolder) {
+
+            }
+
+        };
+
+        recyclerView.setOnItemMoveListener(mItemMoveListener);// 监听拖拽，更新UI。
+
+
+// 创建菜单：
+        SwipeMenuCreator mSwipeMenuCreator = new SwipeMenuCreator() {
+            @Override
+            public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int viewType) {
+
+                int height = ViewGroup.LayoutParams.MATCH_PARENT;
+                int width = getResources().getDimensionPixelSize(R.dimen.dp_70);
+                int textsize = getResources().getDimensionPixelSize(R.dimen.dp_10);
+
+                SwipeMenuItem deleteItem = new SwipeMenuItem(view.getContext())
+                        .setBackground(R.color.md_red_500)
+                        .setImage(R.drawable.delete)
+                        .setWidth(width)
+                        .setHeight(height);
+                leftMenu.addMenuItem(deleteItem);// 添加菜单到右侧。
+            }
+        };
+        // 设置监听器。
+        recyclerView.setSwipeMenuCreator(mSwipeMenuCreator);
+
+        SwipeMenuItemClickListener mMenuItemClickListener = new SwipeMenuItemClickListener() {
+            @Override
+            public void onItemClick(SwipeMenuBridge menuBridge) {
+                menuBridge.closeMenu();
+
+                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
+                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+                int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
+
+                if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
+                    position = adapterPosition;
+                    deleteValue();
+                }
+            }
+        };
+
+
+// 菜单点击监听。
+        recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
+
+//
+//        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+//        touchHelper.attachToRecyclerView(recyclerView);
 
         initLights();
 
         return view;
     }
-
 
     private void updateSQLiteData() {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();

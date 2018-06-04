@@ -76,9 +76,10 @@
         <activity android:name=".Activity.BaseActivity" />
         <activity
             android:name=".Activity.WifiConnectActivity"
-            android:theme="@style/Theme.Actionbar"></activity>
+            android:theme="@style/Theme.Actionbar" />
         <activity android:name="com.esp.smartconfig.SweetDialogActivity" />
         <activity android:name=".Activity.SmartConfigActivity" />
+        <activity android:name=".Activity.GuideActivity"></activity>
     </application>
 
 </manifest>

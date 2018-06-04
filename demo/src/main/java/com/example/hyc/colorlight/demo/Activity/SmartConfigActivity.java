@@ -1,16 +1,9 @@
 package com.example.hyc.colorlight.demo.Activity;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -19,14 +12,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.esp.smartconfig.EspWifiAdminSimple;
 import com.esp.smartconfig.EsptouchTask;
@@ -38,19 +26,12 @@ import com.esp.smartconfig.sweet.OnDismissCallbackListener;
 import com.example.hyc.colorlight.demo.MyDatabaseHelper;
 import com.example.hyc.colorlight.demo.PreferenceUtil;
 import com.example.hyc.colorlight.demo.R;
-import com.example.hyc.colorlight.demo.SelfDialog;
-import com.example.hyc.colorlight.demo.myAdapter.BaseViewCommonAdapter;
-import com.example.hyc.colorlight.demo.myAdapter.WifiListAdapter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.os.Build.VERSION_CODES.M;
 import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.ID;
 import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.NAME;
 import static com.example.hyc.colorlight.demo.Activity.WifiConnectActivity.TYPE;

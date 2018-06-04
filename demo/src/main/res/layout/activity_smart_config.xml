@@ -52,7 +52,7 @@
                 android:paddingLeft="40dp"
                 android:hint="请确保已连接Wifi"
                 android:gravity="center_vertical"
-                android:textColorHint="@color/md_grey_500"
+                android:textColorHint="@color/md_red_500"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:maxLines="1"

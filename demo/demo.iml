@@ -105,6 +105,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="com.yanzhenjie:loading-1.0.2" level="project" />
     <orderEntry type="library" name="com.android.support:animated-vector-drawable-27.0.2" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.10.0@jar" level="project" />
     <orderEntry type="library" name="com.squareup.okio:okio:1.14.0@jar" level="project" />
@@ -114,6 +115,7 @@
     <orderEntry type="library" name="com.android.support:transition-27.0.2" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-27.0.2" level="project" />
     <orderEntry type="library" name="com.tbruyelle.rxpermissions:rxpermissions-0.8.2" level="project" />
+    <orderEntry type="library" name="com.yanzhenjie:recyclerview-swipe-1.1.4" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.1.0" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-solver:1.1.0@jar" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.2@jar" level="project" />

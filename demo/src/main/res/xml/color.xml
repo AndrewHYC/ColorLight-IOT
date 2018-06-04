@@ -6,7 +6,7 @@
     <com.flask.colorpicker.ColorPickerPreference
         android:key="color_picker_preference2"
         android:title="自定义灯光选择"
-        android:summary="自定义更多灯光选取与设置"
+        android:summary="自定义更多灯光"
         app:alphaSlider="false"
         app:density="10"
         app:initialColor="0xFFCDDC39"
