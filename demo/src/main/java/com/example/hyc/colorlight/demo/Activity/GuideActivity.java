@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -20,7 +21,7 @@ import android.widget.ImageView;
 
 import com.example.hyc.colorlight.demo.R;
 
-public class GuideActivity extends Activity {
+public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener {
     private ViewPager viewPager;
 
     /**装分页显示的view的数组*/
@@ -48,7 +49,9 @@ public class GuideActivity extends Activity {
         pageViews.add(inflater.inflate(R.layout.guide_viewpager2, null));
         pageViews.add(inflater.inflate(R.layout.guide_viewpager3,null));
         pageViews.add(inflater.inflate(R.layout.guide_viewpager4,null));
-
+        pageViews.add(inflater.inflate(R.layout.guide_viewpager5, null));
+        pageViews.add(inflater.inflate(R.layout.guide_viewpager6,null));
+        pageViews.add(inflater.inflate(R.layout.guide_viewpager7,null));
         //创建imageviews数组，大小是要显示的图片的数量
         imageViews = new ImageView[pageViews.size()];
         //从指定的XML文件加载视图
@@ -62,7 +65,7 @@ public class GuideActivity extends Activity {
         for(int i=0;i<pageViews.size();i++){
             imageView = new ImageView(GuideActivity.this);
             //设置小圆点imageview的参数
-            imageView.setLayoutParams(new LayoutParams(20,20));//创建一个宽高均为20 的布局
+            imageView.setLayoutParams(new LayoutParams(30,30));//创建一个宽高均为50 的布局
             imageView.setPadding(20, 0, 20, 30);
 
             //将小圆点layout添加到数组中
@@ -84,19 +87,18 @@ public class GuideActivity extends Activity {
 
         //设置viewpager的适配器和监听事件
         viewPager.setAdapter(new GuidePageAdapter());
-        viewPager.setOnPageChangeListener(new GuidePageChangeListener());
+        viewPager.setOnPageChangeListener(this);
     }
 
     private Button.OnClickListener  Button_OnClickListener = new Button.OnClickListener() {
         public void onClick(View v) {
             //设置已经引导
             setGuided();
-
             //跳转
             Intent mIntent = new Intent();
             mIntent.setClass(GuideActivity.this, HomeActivity.class);
-            GuideActivity.this.startActivity(mIntent);
-            GuideActivity.this.finish();
+            startActivity(mIntent);
+            finish();
         }
     };
 
@@ -107,6 +109,29 @@ public class GuideActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(KEY_GUIDE_ACTIVITY, "false");
         editor.commit();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        // TODO Auto-generated method stub
+        for(int i=0;i<imageViews.length;i++){
+            imageViews[position].setBackgroundResource(R.drawable.page_indicator_focused);
+            //不是当前选中的page，其小圆点设置为未选中的状态
+            if(position !=i){
+                imageViews[i].setBackgroundResource(R.drawable.page_indicator);
+            }
+        }
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
 
@@ -134,13 +159,14 @@ public class GuideActivity extends Activity {
         }
 
         //初始化position位置的界面
+        @NonNull
         @Override
         public Object instantiateItem(View v, int position) {
             // TODO Auto-generated method stub
             ((ViewPager) v).addView(pageViews.get(position));
 
             // 测试页卡n内的按钮事件
-            if (position == 3) {
+            if (position == 6) {
                 Button btn = (Button) v.findViewById(R.id.btn_close_guide);
                 btn.setOnClickListener(Button_OnClickListener);
             }
@@ -182,32 +208,4 @@ public class GuideActivity extends Activity {
         }
     }
 
-
-    class GuidePageChangeListener implements OnPageChangeListener{
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            // TODO Auto-generated method stub
-            for(int i=0;i<imageViews.length;i++){
-                imageViews[position].setBackgroundResource(R.drawable.page_indicator_focused);
-                //不是当前选中的page，其小圆点设置为未选中的状态
-                if(position !=i){
-                    imageViews[i].setBackgroundResource(R.drawable.page_indicator);
-                }
-            }
-
-        }
-    }
 }

@@ -4,23 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_margin="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="267dp"
+        android:layout_height="400dp"
+        app:cardCornerRadius="6dp">
+
+        <ImageView
+            android:src="@drawable/guide4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v7.widget.CardView>
 
     <TextView
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="完成教程"/>
-    <Button
-        android:id="@+id/btn_close_guide"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="第四个教程"
         android:layout_margin="10dp"
-        android:textColor="@color/md_white"
-        android:text="知道了"
-        android:background="@color/colorPrimary"/>
+        />
 
 </LinearLayout>

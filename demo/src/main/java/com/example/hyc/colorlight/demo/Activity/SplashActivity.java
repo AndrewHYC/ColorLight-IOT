@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.hyc.colorlight.demo.Adapter.StatusBarUtils;
 import com.example.hyc.colorlight.demo.R;
 
 import java.util.Timer;
@@ -17,13 +18,14 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.md_white);
         setContentView(R.layout.activity_splash);
 
         boolean mFirst = isFirstEnter(SplashActivity.this,SplashActivity.this.getClass().getName());
         if(mFirst)
-            mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY,1000);
+            mHandler.sendEmptyMessageDelayed(SWITCH_GUIDACTIVITY,1500);
         else
-            mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY,1000);
+            mHandler.sendEmptyMessageDelayed(SWITCH_MAINACTIVITY,1500);
     }
 
     //****************************************************************
@@ -34,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
     private boolean isFirstEnter(Context context,String className){
         if(context==null || className==null||"".equalsIgnoreCase(className))return false;
         String mResultStr = context.getSharedPreferences(SHAREDPREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_GUIDE_ACTIVITY, "");//取得所有类名 如 com.my.MainActivity
+                .getString(KEY_GUIDE_ACTIVITY, "");//取得所有类名 如 com.my.LampActivity
         if(mResultStr.equalsIgnoreCase("false"))
             return false;
         else

@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name">ColorLight</string>
+    <string name="app_name">IOTFuture</string>
     <string name="action_settings">Settings</string>
     <string name="color_picker_dialog">Color Picker Dialog</string>
     <string name="title_activity_debug">Sign in</string>

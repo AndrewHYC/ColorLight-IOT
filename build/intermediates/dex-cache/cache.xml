@@ -23,16 +23,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="/home/hyc/.gradle/caches/transforms-1/files-1.1/loading-1.0.2.aar/d5e7e1f9ceb753425a4243ab9af1e803/jars/classes.jar"
-        jumboMode="false"
-        min-sdk-version="19"
-        optimize="true"
-        revision="26.0.2"
-        sha1="256089651e34273f719c1b4cd5683b9a309b5ba8">
-        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/30.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/home/hyc/Coding/Android/ColorLight/config/build/intermediates/intermediate-jars/release/classes.jar"
         jumboMode="false"
         min-sdk-version="19"
@@ -40,16 +30,6 @@
         revision="26.0.2"
         sha1="7e7d0c487725b1aec95b3378cb12889e15de5df8">
         <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/37.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/home/hyc/.gradle/caches/transforms-1/files-1.1/recyclerview-swipe-1.1.4.aar/7fcce66f1f449dab05853964492492cc/jars/classes.jar"
-        jumboMode="false"
-        min-sdk-version="19"
-        optimize="true"
-        revision="26.0.2"
-        sha1="e9d87f53023122b88ffad6530615b3579606ab02">
-        <dex dex="/home/hyc/Coding/Android/ColorLight/demo/build/intermediates/transforms/preDex/release/6.jar" />
     </item>
 
 </items>

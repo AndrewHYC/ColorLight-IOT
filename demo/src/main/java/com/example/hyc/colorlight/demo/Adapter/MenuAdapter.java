@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.hyc.colorlight.demo.Activity.AboutActivity;
 import com.example.hyc.colorlight.demo.Activity.GuideActivity;
 import com.example.hyc.colorlight.demo.Activity.WifiConnectActivity;
 import com.example.hyc.colorlight.demo.Menu;
@@ -66,8 +67,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                     break;
                 case 2:
                     try {
-                        view.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://www.qq.com")));
+                        Intent intent1 = new Intent(view.getContext(), AboutActivity.class);
+                        view.getContext().startActivity(intent1);
+
                     } catch (ActivityNotFoundException ignored) {
                     }
                     break;
@@ -75,7 +77,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                     if (false == true) {
                         try {
                             view.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.136.com")));
+                                    Uri.parse("https://www.baidu.com")));
                         } catch (ActivityNotFoundException ignored) {
                         }
                     } else {

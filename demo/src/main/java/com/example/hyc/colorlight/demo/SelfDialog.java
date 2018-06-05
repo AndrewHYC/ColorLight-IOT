@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.hyc.colorlight.demo.R;
 
 import com.example.hyc.colorlight.demo.Activity.WifiConnectActivity;
 
@@ -72,7 +73,7 @@ public class SelfDialog extends Dialog {
 
 
     public SelfDialog(Context context,String type,String Id, String str, PriorityListener listener) {
-        super(context, R.style.MyDialog);
+        super(context, R.style.alert_dialog);
         if(str != null){
             yesStr = str;
         }

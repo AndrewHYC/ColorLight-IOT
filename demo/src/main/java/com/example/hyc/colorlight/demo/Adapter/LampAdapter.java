@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.hyc.colorlight.demo.Activity.DebugActivity;
-import com.example.hyc.colorlight.demo.Activity.MainActivity;
+import com.example.hyc.colorlight.demo.Activity.LampActivity;
 import com.example.hyc.colorlight.demo.Light;
 import com.example.hyc.colorlight.demo.Activity.OtherActivity;
 import com.example.hyc.colorlight.demo.R;
@@ -27,7 +27,7 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
  * Created by hyc on 18-5-24.
  */
 
-public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder>{
+public class LampAdapter extends RecyclerView.Adapter<LampAdapter.myViewHolder>{
 
 //    onCallbackListener listener;
 
@@ -82,19 +82,19 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder
 //                        intent.putExtra(WifiConnectActivity.NAME, light.getName());
 //                        mContext.startActivity(intent);
 
-                        intent= new Intent(mContext, MainActivity.class);
+                        intent= new Intent(mContext, LampActivity.class);
                         intent.putExtra("isConfig",false);
-                        intent.putExtra(MainActivity.LIGHT_NAME, light.getName());
-                        intent.putExtra(MainActivity.LIGHT_IMAGE_ID, light.getImageId());
-                        intent.putExtra(MainActivity.LIGHT_ID, light.getId());
+                        intent.putExtra(LampActivity.LIGHT_NAME, light.getName());
+                        intent.putExtra(LampActivity.LIGHT_IMAGE_ID, light.getImageId());
+                        intent.putExtra(LampActivity.LIGHT_ID, light.getId());
                         mContext.startActivity(intent);
 
                     }else if(light.getIsConfig()==1){
-                        intent= new Intent(mContext, MainActivity.class);
+                        intent= new Intent(mContext, LampActivity.class);
                         intent.putExtra("isConfig",true);
-                        intent.putExtra(MainActivity.LIGHT_NAME, light.getName());
-                        intent.putExtra(MainActivity.LIGHT_IMAGE_ID, light.getImageId());
-                        intent.putExtra(MainActivity.LIGHT_ID, light.getId());
+                        intent.putExtra(LampActivity.LIGHT_NAME, light.getName());
+                        intent.putExtra(LampActivity.LIGHT_IMAGE_ID, light.getImageId());
+                        intent.putExtra(LampActivity.LIGHT_ID, light.getId());
                         mContext.startActivity(intent);
                     }
                     break;
@@ -118,7 +118,7 @@ public class LightAdapter extends RecyclerView.Adapter<LightAdapter.myViewHolder
         }
     }
 
-    public LightAdapter(List<Light> lightList){
+    public LampAdapter(List<Light> lightList){
         mLightList = lightList;
     }
 

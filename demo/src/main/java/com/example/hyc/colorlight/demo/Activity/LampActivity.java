@@ -17,9 +17,11 @@
 package com.example.hyc.colorlight.demo.Activity;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -45,13 +47,10 @@ import com.bumptech.glide.Glide;
 import com.example.hyc.colorlight.demo.LightFragment.ColorFragment;
 import com.example.hyc.colorlight.demo.LightFragment.DemoFragment;
 import com.example.hyc.colorlight.demo.MQTT.MQTTService;
+import com.example.hyc.colorlight.demo.MyDatabaseHelper;
 import com.example.hyc.colorlight.demo.R;
-import com.yzq.zxinglibrary.android.CaptureActivity;
-import com.yzq.zxinglibrary.bean.ZxingConfig;
-import com.yzq.zxinglibrary.common.Constant;
 
-//implements ColorPickerDialogListener
-public class MainActivity extends AppCompatActivity implements DemoFragment.FragmentInteraction,
+public class LampActivity extends AppCompatActivity implements DemoFragment.FragmentInteraction,
         ColorFragment.FragmentInteraction2 {
 
   private static final String TAG = "MianFragment";
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     lightId = intent.getStringExtra(LIGHT_ID);
     boolean isConfig = intent.getBooleanExtra("isConfig",false);
     if(!isConfig){
-      showSnackBar("请先进行配置");
+      showSnackBar("请先点击上方按钮进行配置");
     }
     Log.d(TAG, "onCreate: lightId="+lightId);
 
@@ -132,16 +131,13 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     receiver=new MqttReceiver();
     IntentFilter filter=new IntentFilter();
     filter.addAction("com.example.hyc.colorlight.demo.MQTT.MQTTService");
-    MainActivity.this.registerReceiver(receiver,filter);
+    LampActivity.this.registerReceiver(receiver,filter);
 
     //监听网络变化
     intentFilter = new IntentFilter();
     intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
     networkChangeReceiver = new NetworkChangeReceiver();
     registerReceiver(networkChangeReceiver,intentFilter);
-
-//    Bundle bundle = new Bundle();       //Activity向Fragment传值
-//    bundle.putString("LIGHT_ID", lightId);
 
     //标题栏
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -182,55 +178,29 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
       public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if(b){
           String json = "{\"ledmode\":3,\"cc\":1}";
-//          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
+//          Toast.makeText(LampActivity.this,json,Toast.LENGTH_SHORT).show();
 
           if (info != null && info.isAvailable()) {
               myService.publish(json);
 //              myService.publish("1023");
           }else{
 
-//            Toast toast = Toast.makeText(getApplicationContext(),
-//                    "失败", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.BOTTOM, 0, 100);
-//            LinearLayout toastView = (LinearLayout) toast.getView();
-//            ImageView imageCodeProject = new ImageView(getApplicationContext());
-//            imageCodeProject.setImageResource(R.drawable.unsuc);
-//            toastView.addView(imageCodeProject, 0);
-//            toast.show();
             showSnackBar("请检查网络是否连接");
             breathButton.setChecked(false);
           }
         }else{
           String json = "{\"ledmode\":3,\"cc\":0}";
-//          Toast.makeText(MainActivity.this,json,Toast.LENGTH_SHORT).show();
+
           if (info != null && info.isAvailable()) {
               myService.publish(json);
-//            myService.publish("0");
           }else{
 
-//            Toast toast = Toast.makeText(getApplicationContext(),
-//                    "失败", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.BOTTOM, 0, 100);
-//            LinearLayout toastView = (LinearLayout) toast.getView();
-//            ImageView imageCodeProject = new ImageView(getApplicationContext());
-//            imageCodeProject.setImageResource(R.drawable.unsuc);
-//            toastView.addView(imageCodeProject, 0);
-//            toast.show();            showSnackBar("请检查网络是否连接");
             breathButton.setChecked(true);
           }
         }
       }
     });
 
-//    //==================Debug==============//
-//    final EditText editText = (EditText)findViewById(R.id.Edit_Text);
-//    findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        String str = editText.getText().toString();
-//        myService.publish(str);
-//      }
-//    });
 
   }
 
@@ -241,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
         finish();
         return true;
       case R.id.config:
-        Intent intent = new Intent(MainActivity.this, WifiConnectActivity.class);
+        Intent intent = new Intent(LampActivity.this, WifiConnectActivity.class);
         intent.putExtra(WifiConnectActivity.ID, lightId);
         intent.putExtra(WifiConnectActivity.NAME, lightName);
         intent.putExtra(WifiConnectActivity.TYPE, "爱心灯");
@@ -270,14 +240,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     if (info != null && info.isAvailable()) {
               myService.publish(json);
     }else{
-//      Toast toast = Toast.makeText(getApplicationContext(),
-//              "失败", Toast.LENGTH_SHORT);
-//      toast.setGravity(Gravity.BOTTOM, 0, 100);
-//      LinearLayout toastView = (LinearLayout) toast.getView();
-//      ImageView imageCodeProject = new ImageView(getApplicationContext());
-//      imageCodeProject.setImageResource(R.drawable.unsuc);
-//      toastView.addView(imageCodeProject, 0);
-//      toast.show();
+
       showSnackBar("请检查网络是否连接");
     }
   }
@@ -300,14 +263,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
     if (info != null && info.isAvailable()) {
               myService.publish(json);
     }else{
-//      Toast toast = Toast.makeText(getApplicationContext(),
-//              "失败", Toast.LENGTH_SHORT);
-//      toast.setGravity(Gravity.BOTTOM, 0, 100);
-//      LinearLayout toastView = (LinearLayout) toast.getView();
-//      ImageView imageCodeProject = new ImageView(getApplicationContext());
-//      imageCodeProject.setImageResource(R.drawable.unsuc);
-//      toastView.addView(imageCodeProject, 0);
-//      toast.show();
+
       showSnackBar("请检查网络是否连接");
     }
   }
@@ -348,6 +304,15 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
       Toast toast = null;
 
       if(mqttMessage.equals("ok")){
+
+        //=====更新数据库======//
+        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(LampActivity.this);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("isConfig",1);
+        db.update("Light",values,"id = ? && type = ? ",new String[]{lightId,"爱心灯"});
+        //===========================//
+
         toast = Toast.makeText(getApplicationContext(),
                 "成功", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM, 0, 100);
@@ -380,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements DemoFragment.Frag
    * 展示一个SnackBar
    */
   public void showSnackBar(String message) {
+
     //去掉虚拟按键
     getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION //隐藏虚拟按键栏

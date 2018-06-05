@@ -195,11 +195,11 @@ public class SmartConfigActivity extends SweetDialogActivity{
                                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                                         ContentValues values = new ContentValues();
                                         values.put("isConfig",1);
-                                        db.update("Light",values,"id = ? && type = ? ",new String[]{id,name});
+                                        db.update("Light",values,"id = ? && type = ? ",new String[]{id,type});
                                         //===========================//
 
                                         if(type.equals("爱心灯")){
-                                            Intent intent = new Intent(SmartConfigActivity.this, MainActivity.class);
+                                            Intent intent = new Intent(SmartConfigActivity.this, LampActivity.class);
                                             intent.putExtra(WifiConnectActivity.TYPE, type);
                                             intent.putExtra(WifiConnectActivity.ID, id);
                                             intent.putExtra(WifiConnectActivity.NAME, name);
@@ -212,7 +212,7 @@ public class SmartConfigActivity extends SweetDialogActivity{
                                     }
                                 });
                             } else {
-                                onToastErrorMsg("配置失败\n请确保智能终端打开了一键配置模式");
+                                onToastErrorMsg("配置失败\n请确保智能终端打开了配置模式");
                             }
                         }
                     }

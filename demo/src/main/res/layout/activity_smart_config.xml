@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/colorAccent"
-            android:text="*一键配置设备*"/>
+            android:text="*一键配置智能终端*"/>
 
     </LinearLayout>
 

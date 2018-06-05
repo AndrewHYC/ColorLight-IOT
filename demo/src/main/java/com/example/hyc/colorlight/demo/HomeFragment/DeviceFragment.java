@@ -1,29 +1,22 @@
 package com.example.hyc.colorlight.demo.HomeFragment;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +28,7 @@ import com.example.hyc.colorlight.demo.Light;
 import com.example.hyc.colorlight.demo.MyDatabaseHelper;
 import com.example.hyc.colorlight.demo.R;
 import com.example.hyc.colorlight.demo.SelfDialog;
-import com.example.hyc.colorlight.demo.Adapter.LightAdapter;
+import com.example.hyc.colorlight.demo.Adapter.LampAdapter;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -57,20 +50,19 @@ public class DeviceFragment extends Fragment {
     private View view;
     private MyDatabaseHelper databaseHelper;
 
-    private Light[] lights;// = {new Light("Light Name",R.drawable.light2,"ID Number")};
+    private Light[] lights;
     private SelfDialog selfDialog;
     private SwipeMenuRecyclerView recyclerView;
 
     private List<Light> lightList = new ArrayList<>();
 
-    private LightAdapter adapter;
+    private LampAdapter adapter;
 
     private AddReceiver addReceiver=null;
 
     private int position;  //左滑删除时获取位置
 
     private static String TAG = "DeviceFragment";
-//    ItemTouchHelper.SimpleCallback callback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,7 +102,7 @@ public class DeviceFragment extends Fragment {
         int length = cursor.getCount();
         Log.d(TAG, "onCreate: length = "+length);
         if(length == 0){
-            showSnackBar("没有设备?\n请通过上方扫码或手动添加");
+            showSnackBar("扫码或手动添加设备");
         }
         Light[] tempLights = new Light[length];
         lights = tempLights;
@@ -228,12 +220,8 @@ public class DeviceFragment extends Fragment {
         };
 
 
-// 菜单点击监听。
+        // 菜单点击监听。
         recyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener);
-
-//
-//        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-//        touchHelper.attachToRecyclerView(recyclerView);
 
         initLights();
 
@@ -262,7 +250,7 @@ public class DeviceFragment extends Fragment {
             lightList.add(lights[i]);
         }
 
-        adapter = new LightAdapter(lightList);
+        adapter = new LampAdapter(lightList);
         Log.d(TAG, "initLights: adapter="+adapter);
         recyclerView.setAdapter(adapter);
     }
@@ -325,7 +313,7 @@ public class DeviceFragment extends Fragment {
             Toast.makeText(view.getContext(),"添加成功",Toast.LENGTH_SHORT).show();
             //=====================================================//
 
-            adapter = new LightAdapter(lightList);
+            adapter = new LampAdapter(lightList);
             recyclerView.setAdapter(adapter);
         }
     }
