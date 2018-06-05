@@ -1,168 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="com.example.hyc.colorlight.demo.Activity.HomeActivity">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hyc.colorlight.demo.Activity.HomeActivity">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:fitsSystemWindows="true">
+                <android.support.design.widget.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.AppBarOverlay">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                        <android.support.v7.widget.Toolbar
+                            android:id="@+id/toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:background="?attr/colorPrimary"
+                            android:theme="@style/ToolBarStyle"
+                            app:layout_scrollFlags="scroll|enterAlways|snap"/>
+                </android.support.design.widget.AppBarLayout>
 
-                <ImageView
-                    android:id="@+id/light_image_view"
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:fitsSystemWindows="true"
-                    app:layout_collapseMode="parallax"/>
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin">
-
-                </android.support.v7.widget.Toolbar>
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
-
-
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp"
-                    app:cardCornerRadius="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:text="亮度"
-                            android:textColor="#000000"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="15dp"
-                            android:textSize="22dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <SeekBar
-                            android:layout_marginRight="10dp"
-                            android:id="@+id/color_seekbar"
-                            android:layout_gravity="center_vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:scrollbarSize="50sp"
-                            />
-
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/breath_button_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="15dp"
-                    app:cardCornerRadius="5dp">
-                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    android:orientation="vertical"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                         <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="15dp"
-                                android:textColor="#FF4081"
-                                android:text="让爱~呼吸"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="22dp"/>
+                            android:id="@+id/bottomlinear"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:orientation="horizontal"
+                            android:background="@color/colorPrimary">
+                                <Button
+                                    android:id="@+id/btn_first"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@color/colorPrimary"
+                                    android:padding="-5dp"
+                                    android:textSize="14sp"
+                                    android:text="设备"
+                                    />
+                                <Button
+                                    android:id="@+id/btn_second"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@color/colorPrimary"
+                                    android:padding="-5dp"
+                                    android:textSize="14sp"
+                                    android:text="我的"/>
 
-                            <TextView
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginBottom="15dp"
-                                android:text="控制爱心灯呼吸闪烁"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/cursorarea"
+                            android:layout_width="match_parent"
+                            android:background="#DDDDDD"
+                            android:orientation="horizontal"
+                            android:layout_height="3dp">
+
+                                <ImageView
+                                    android:id="@+id/cursor_btn"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+                                </ImageView>
+
                         </LinearLayout>
 
-                        <ToggleButton
-                            android:id="@+id/breath_tb"
-                            android:layout_width="60dp"
-                            android:layout_height="80dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:background="#00ffffff"
-                            android:button="@drawable/account_message_select"
-                            android:checked="false"
-                            android:text=""
-                            android:textOff=""
-                            android:textOn=""/>
 
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/myviewpager"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="12"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/light_card_view1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp"
-                    app:cardCornerRadius="5dp"/>
+                        </android.support.v4.view.ViewPager>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/light_card_view2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp"
-                    app:cardCornerRadius="5dp"/>
+                </LinearLayout>
 
 
 
-
-
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-
-    </android.support.design.widget.CoordinatorLayout>
-
+</android.support.design.widget.CoordinatorLayout>

@@ -17,12 +17,19 @@
   -->
 
 <resources>
-  <color name="colorPrimary">#FF009688</color>
-  <color name="colorPrimaryDark">#FF009688</color>
+
+  <color name="colorPrimary">#FF00008b</color>
+  <color name="colorPrimaryDark">#FF00008b</color>
   <color name="colorAccent">#FF03A9F4</color>
-  <color name="colorPrimary1">#119688</color>
+  <color name="colorPrimary1">#8800008b</color>
+
+  <!--<color name="colorPrimary">#FF009688</color>-->
+  <!--<color name="colorPrimaryDark">#FF009688</color>-->
+  <!--<color name="colorAccent">#FF03A9F4</color>-->
+  <!--<color name="colorPrimary1">#88009688</color>-->
 
   <array name="demo_colors">
+    <item>@color/zangqing</item>
     <item>@color/md_red_500</item>
     <item>@color/md_pink_500</item>
     <item>@color/md_purple_500</item>
@@ -44,6 +51,8 @@
     <item>@color/md_blue_grey_500</item>
     <item>@color/md_white</item>
   </array>
+
+  <color name="zangqing">#00008b</color>
 
   <!-- red -->
   <color name="md_red_500">#f44336</color>

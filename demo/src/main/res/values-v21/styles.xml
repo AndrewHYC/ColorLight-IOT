@@ -54,8 +54,15 @@
     <item name="android:textColor">#AAAAAA</item>
   </style>
 
-    <style name="HomeActivityTheme" parent="AppTheme">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
+
+  <style name="LampActivityTheme" parent="AppTheme">
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="actionMenuTextColor">@color/md_white</item>
+    <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+
+  </style>
 
 </resources>

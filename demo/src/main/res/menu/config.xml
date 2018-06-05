@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/config"
-        android:icon="@drawable/config_s"
+        android:icon="@drawable/config"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"
         android:title="config" />

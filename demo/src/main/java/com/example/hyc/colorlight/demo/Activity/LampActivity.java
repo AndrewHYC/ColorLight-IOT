@@ -16,6 +16,7 @@
 
 package com.example.hyc.colorlight.demo.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,8 +25,11 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +48,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
+import com.example.hyc.colorlight.demo.Adapter.StatusBarUtils;
 import com.example.hyc.colorlight.demo.LightFragment.ColorFragment;
 import com.example.hyc.colorlight.demo.LightFragment.DemoFragment;
 import com.example.hyc.colorlight.demo.MQTT.MQTTService;
@@ -57,11 +62,13 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
 
   // Give your color picker dialog unique IDs if you have multiple dialogs.
   private static final int DIALOG_ID = 0;
+  private boolean isBreath = false;
+  private boolean isHeatbeat = false;
 
   public static final String LIGHT_NAME = "light_name";
   public static final String LIGHT_IMAGE_ID = "light_image_id";
   public static final String LIGHT_ID = "light_id";
-  private SeekBar mseekBarvolume;     //滑块
+
 
   MQTTService myService = new MQTTService();
   private String lightId;
@@ -72,13 +79,18 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
   private MqttReceiver receiver = null;
   ConnectivityManager connectivityManager=null;
   NetworkInfo info = null;
+  ToggleButton breathButton;
+  FloatingActionButton fab;
+  FloatingActionButton fabshow;
+  private SeekBar mseekBarvolume;     //滑块
 
   private IntentFilter intentFilter = null;
   private NetworkChangeReceiver networkChangeReceiver=null;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+    StatusBarUtils.setWindowStatusBarColor(this,R.color.transparent);
+    setContentView(R.layout.activity_lamp);
 
     Intent intent = getIntent();
     lightName = intent.getStringExtra(LIGHT_NAME);
@@ -100,7 +112,7 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
     startService(serviceIntent);
 
     mseekBarvolume = (SeekBar)findViewById(R.id.color_seekbar);
-    mseekBarvolume.setMax(1023);
+    mseekBarvolume.setMax(255);
 
     mseekBarvolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override
@@ -111,6 +123,7 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
         }
 
         String brightness = "{\"ledmode\":1,\"cl\":"+String.valueOf(tmpInt)+"}";
+        Log.d(TAG, "onProgressChanged: brightness:"+brightness);
 
         myService.publish(brightness);
 
@@ -154,7 +167,6 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
     collapsingToolbarLayout.setTitle(lightName);
     Glide.with(this).load(lightImageId).into(homeImageView);
 
-
     if(savedInstanceState == null) {
 
       DemoFragment demoFragment = new DemoFragment();
@@ -172,11 +184,37 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
               .commit();
     }
 
-    final ToggleButton breathButton = (ToggleButton)findViewById(R.id.breath_tb);
+    fab = (FloatingActionButton)findViewById(R.id.heatbeat);
+//    fabshow = (FloatingActionButton)findViewById(R.id.heatbeat_show);
+//    fabshow.hide();
+
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if(!isHeatbeat){
+          String heatbeat = "{\"xintiao\":1}";
+          myService.publish(heatbeat);
+          isHeatbeat = true;
+//          fabshow.show();
+          Toast.makeText(LampActivity.this,"开始心跳检测",Toast.LENGTH_SHORT).show();
+        }else{
+          String heatbeat = "{\"xintiao\":0}";
+          myService.publish(heatbeat);
+          isHeatbeat = false;
+//          fabshow.hide();
+          Toast.makeText(LampActivity.this,"停止心跳检测",Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
+
+    breathButton = (ToggleButton)findViewById(R.id.breath_tb);
+
     breathButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
       public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if(b){
+          isBreath = true;
+
           String json = "{\"ledmode\":3,\"cc\":1}";
 //          Toast.makeText(LampActivity.this,json,Toast.LENGTH_SHORT).show();
 
@@ -184,23 +222,31 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
               myService.publish(json);
 //              myService.publish("1023");
           }else{
-
             showSnackBar("请检查网络是否连接");
             breathButton.setChecked(false);
           }
         }else{
-          String json = "{\"ledmode\":3,\"cc\":0}";
-
-          if (info != null && info.isAvailable()) {
-              myService.publish(json);
-          }else{
-
-            breathButton.setChecked(true);
-          }
+            StopBreathe();
         }
       }
     });
+  }
 
+
+
+
+  private void StopBreathe(){
+
+    isBreath = false;
+
+    String json = "{\"ledmode\":3,\"cc\":0}";
+
+    if (info != null && info.isAvailable()) {
+      myService.publish(json);
+      breathButton.setChecked(false);
+    }else{
+      breathButton.setChecked(true);
+    }
 
   }
 
@@ -238,7 +284,10 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
             +",\"cr\":"+array[1]+",\"cg\":"+array[2]+",\"cb\":"+array[3]+"}";
 //    Toast.makeText(this,json,Toast.LENGTH_SHORT).show();
     if (info != null && info.isAvailable()) {
-              myService.publish(json);
+      if(isBreath){
+        StopBreathe();
+      }
+      myService.publish(json);
     }else{
 
       showSnackBar("请检查网络是否连接");
@@ -261,7 +310,11 @@ public class LampActivity extends AppCompatActivity implements DemoFragment.Frag
             +",\"cr\":"+array[1]+",\"cg\":"+array[2]+",\"cb\":"+array[3]+"}";
 //    Toast.makeText(this,json,Toast.LENGTH_SHORT).show();
     if (info != null && info.isAvailable()) {
-              myService.publish(json);
+      //若进行呼吸停止呼吸
+      if(isBreath){
+        StopBreathe();
+      }
+      myService.publish(json);
     }else{
 
       showSnackBar("请检查网络是否连接");

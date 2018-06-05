@@ -4,6 +4,7 @@ package com.example.hyc.colorlight.demo.Activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -92,13 +93,19 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     private Button.OnClickListener  Button_OnClickListener = new Button.OnClickListener() {
         public void onClick(View v) {
-            //设置已经引导
-            setGuided();
-            //跳转
-            Intent mIntent = new Intent();
-            mIntent.setClass(GuideActivity.this, HomeActivity.class);
-            startActivity(mIntent);
-            finish();
+            String mResultStr = GuideActivity.this.getSharedPreferences(SHAREDPREFERENCES_NAME, Context.MODE_PRIVATE)
+                    .getString(KEY_GUIDE_ACTIVITY, "");//取得所有类名 如 com.my.LampActivity
+            if(mResultStr.equalsIgnoreCase("false")){
+                finish();
+            }else{
+                //设置已经引导
+                setGuided();
+                //跳转
+                Intent mIntent = new Intent();
+                mIntent.setClass(GuideActivity.this, HomeActivity.class);
+                startActivity(mIntent);
+                finish();
+            }
         }
     };
 

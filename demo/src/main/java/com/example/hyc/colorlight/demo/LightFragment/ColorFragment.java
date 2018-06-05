@@ -86,17 +86,6 @@ public class ColorFragment extends PreferenceFragment implements ColorPickerPref
             Log.d(TAG, "1.New default color is: #" + newDefaultColor);
             Toast.makeText(getActivity(),"选中灯光颜色: #"+newDefaultColor,Toast.LENGTH_SHORT).show();
             listener.process2(newDefaultColor);
-//          initBanner(newDefaultColor, new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//              e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//              String responseText = response.body().string();
-//            }
-//          });
         }
         return true;
     }

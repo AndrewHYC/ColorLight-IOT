@@ -28,7 +28,7 @@
     <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
   </style>
 
-  <style name="HomeActivityTheme" parent="AppTheme">
+  <style name="LampActivityTheme" parent="AppTheme">
     <item name="actionMenuTextColor">@color/md_white</item>
     <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
     <item name="colorPrimary">@color/colorPrimary</item>

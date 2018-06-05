@@ -45,7 +45,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".Activity.LampActivity">
+        <activity android:name=".Activity.LampActivity"
+            android:theme="@style/Theme.Actionbar">
 
             <!-- android:theme="@style/HomeActivityTheme"> -->
         </activity>

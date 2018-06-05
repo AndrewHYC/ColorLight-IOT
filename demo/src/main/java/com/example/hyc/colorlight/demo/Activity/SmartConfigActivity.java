@@ -185,30 +185,32 @@ public class SmartConfigActivity extends SweetDialogActivity{
                                     sb.append("\nthere's " + (result.size() - count)
                                             + " more result(s) without showing\n");
                                 }
+
+                                //=====更新数据库======//
+                                MyDatabaseHelper databaseHelper = new MyDatabaseHelper(SmartConfigActivity.this);
+                                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                values.put("isConfig",1);
+                                db.update("Light",values,"id = ? && type = ? ",new String[]{id,type});
+                                //===========================//
+
                                 onToast(new OnDismissCallbackListener(sb.toString()){
                                     @Override
                                     public void onCallback() {
                                         PreferenceUtil.getInstance().writePreferences(PreferenceUtil.PSW,apPassword);
-
-                                        //=====更新数据库======//
-                                        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(SmartConfigActivity.this);
-                                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                                        ContentValues values = new ContentValues();
-                                        values.put("isConfig",1);
-                                        db.update("Light",values,"id = ? && type = ? ",new String[]{id,type});
-                                        //===========================//
-
+                                        Log.d(TAG, "onCallback: type="+type);
                                         if(type.equals("爱心灯")){
                                             Intent intent = new Intent(SmartConfigActivity.this, LampActivity.class);
                                             intent.putExtra(WifiConnectActivity.TYPE, type);
                                             intent.putExtra(WifiConnectActivity.ID, id);
                                             intent.putExtra(WifiConnectActivity.NAME, name);
                                             startActivity(intent);
+                                            finish();
                                         }else if(type.equals("")){
                                             Intent intent = new Intent(SmartConfigActivity.this, HomeActivity.class);
                                             startActivity(intent);
+                                            finish();
                                         }
-                                        finish();
                                     }
                                 });
                             } else {

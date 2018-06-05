@@ -1,10 +1,8 @@
 package com.example.hyc.colorlight.demo.Activity;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 
 import android.support.v4.app.ActivityCompat;
@@ -17,11 +15,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -35,7 +31,6 @@ import com.example.hyc.colorlight.demo.HomeFragment.DeviceFragment;
 import com.example.hyc.colorlight.demo.HomeFragment.DeviceFragmentPagerAdapter;
 import com.example.hyc.colorlight.demo.HomeFragment.MineFragment;
 
-import com.example.hyc.colorlight.demo.MQTT.MQTTService;
 import com.example.hyc.colorlight.demo.MQTT.UpdateService;
 import com.example.hyc.colorlight.demo.R;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -49,6 +44,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private static String TAG = "HomeActivity";
 
     private long exitTime = 0;
+
+    String themeColor;
+    String alphathemeColor;
 
     private UpdateService Service = new UpdateService();
     private boolean update;
@@ -74,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -92,6 +90,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     public void initView(){
 
+        themeColor = "#"+Integer.toHexString(getResources().getColor(R.color.colorPrimary));
+        alphathemeColor = "#"+Integer.toHexString(getResources().getColor(R.color.colorPrimary1));
+
         myviewpager = (ViewPager)findViewById(R.id.myviewpager);
 
         btn_first = (Button)findViewById(R.id.btn_first);
@@ -100,7 +101,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         btnArgs = new Button[]{btn_first,btn_second};
 
         cursor = (ImageView)findViewById(R.id.cursor_btn);
-        cursor.setBackgroundColor(Color.parseColor("#88009688"));
+
+        cursor.setBackgroundColor(Color.parseColor(alphathemeColor));
+
 
         myviewpager.setOnPageChangeListener(this);
         btn_first.setOnClickListener(this);
@@ -129,8 +132,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     //重置所有按钮的颜色
     public void resetButtonColor(){
-        btn_first.setBackgroundColor(Color.parseColor("#FF009688"));
-        btn_second.setBackgroundColor(Color.parseColor("#FF009688"));
+
+        btn_first.setBackgroundColor(Color.parseColor(themeColor));
+        btn_second.setBackgroundColor(Color.parseColor(themeColor));
 
         btn_first.setTextColor(Color.parseColor("#bebebe"));
         btn_second.setTextColor(Color.parseColor("#bebebe"));
